@@ -1009,6 +1009,9 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$re
 var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$modals$2f$create$2d$exercise$2d$modal$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/components/modals/create-exercise-modal.tsx [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$badge$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/components/ui/badge.tsx [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/components/ui/dialog.tsx [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$context$2f$AuthContext$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/context/AuthContext.tsx [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$supabase$2f$client$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/lib/supabase/client.ts [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$date$2d$fns$2f$format$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__ = __turbopack_context__.i("[project]/node_modules/date-fns/format.js [app-client] (ecmascript) <locals>");
 ;
 var _s = __turbopack_context__.k.signature();
 "use client";
@@ -1018,58 +1021,15 @@ var _s = __turbopack_context__.k.signature();
 ;
 ;
 ;
-const mockExercises = [
-    {
-        id: "1",
-        title: "Calculus Problem Set",
-        subject: "Mathematics",
-        price: 15.00,
-        status: "solved",
-        submittedDate: "2024-03-18",
-        fileName: "calculus_problems.pdf",
-        solvedByTutor: {
-            id: "t1",
-            name: "Dr. Smith"
-        },
-        solutionFileName: "calculus_problems_solution.pdf"
-    },
-    {
-        id: "2",
-        title: "Physics Practice Problems",
-        subject: "Physics",
-        price: 20.50,
-        status: "pending",
-        submittedDate: "2024-03-20",
-        fileName: "physics_questions.pdf"
-    },
-    {
-        id: "3",
-        title: "Chemistry Lab Report Analysis",
-        subject: "Chemistry",
-        price: 10.00,
-        status: "pending",
-        submittedDate: "2024-03-21",
-        fileName: "chem_lab_report.docx"
-    },
-    {
-        id: "exr4",
-        title: "Literary Analysis Essay Outline",
-        subject: "Literature",
-        price: 5.00,
-        status: "solved",
-        submittedDate: "2024-03-22",
-        fileName: "essay_outline_prompt.txt",
-        solvedByTutor: {
-            id: "t3",
-            name: "Ms. Davis"
-        },
-        solutionFileName: "essay_outline_solution.docx"
-    }
-];
+;
+;
+;
 const getStatusVariant = (status)=>{
     switch(status){
-        case 'pending':
+        case 'new':
             return 'default';
+        case 'in_progress':
+            return 'outline';
         case 'solved':
             return 'secondary';
         case 'cancelled':
@@ -1078,37 +1038,173 @@ const getStatusVariant = (status)=>{
             return 'outline';
     }
 };
+const formatStatusDisplay = (status)=>{
+    return status.replace('_', ' ');
+};
 function StudentExercisesPage() {
     _s();
-    const [exercises, setExercises] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(mockExercises);
+    const { user } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$context$2f$AuthContext$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useAuth"])();
+    const supabase = (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$supabase$2f$client$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["createClient"])();
+    const [exercises, setExercises] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])([]);
+    const [loading, setLoading] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(true);
+    const [error, setError] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
     const [isCreateModalOpen, setIsCreateModalOpen] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
     const [filterStatus, setFilterStatus] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])('all');
-    const handleCreateExerciseSubmit = (title, description, subject, price, file)=>{
-        const newExercise = {
-            id: crypto.randomUUID(),
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
+        "StudentExercisesPage.useEffect": ()=>{
+            const fetchExercises = {
+                "StudentExercisesPage.useEffect.fetchExercises": async ()=>{
+                    if (!user) {
+                        setLoading(false);
+                        return;
+                    }
+                    setLoading(true);
+                    setError(null);
+                    try {
+                        const { data, error: exercisesError } = await supabase.from('exercises').select(`
+            id,
             title,
-            description,
             subject,
             price,
-            status: "pending",
-            submittedDate: new Date().toISOString().split('T')[0],
-            fileName: file.name
-        };
-        setExercises((prevExercises)=>[
-                newExercise,
-                ...prevExercises
-            ]);
-        console.log("New Exercise Request Submitted:", newExercise);
-        setIsCreateModalOpen(false);
+            status,
+            submitted_at,
+            request_file_name,
+            solution_file_name,
+            tutor_id,
+            profiles ( name ) 
+          `).eq('student_id', user.id).order('submitted_at', {
+                            ascending: false
+                        });
+                        if (exercisesError) throw exercisesError;
+                        setExercises(data || []);
+                    } catch (err) {
+                        console.error("Error fetching student exercises:", err);
+                        setError(err.message || "Failed to load exercises.");
+                    } finally{
+                        setLoading(false);
+                    }
+                }
+            }["StudentExercisesPage.useEffect.fetchExercises"];
+            fetchExercises();
+        }
+    }["StudentExercisesPage.useEffect"], [
+        user,
+        supabase
+    ]);
+    const handleCreateExerciseSubmit = async (title, description, subject, price, file)=>{
+        if (!user) {
+            setError("You must be logged in to submit an exercise.");
+            return;
+        }
+        if (!file) {
+            setError("A file is required to submit an exercise.");
+            return;
+        }
+        setLoading(true); // Use page loading state for simplicity
+        setError(null);
+        try {
+            // 1. Upload the file to Supabase Storage
+            const fileExt = file.name.split('.').pop();
+            const uniqueFileName = `${user.id}_${Date.now()}.${fileExt}`;
+            const filePath = `requests/${uniqueFileName}`; // Store in a 'requests' folder within the bucket
+            const { error: uploadError } = await supabase.storage.from('exercise_files') // Use the bucket name you created
+            .upload(filePath, file);
+            if (uploadError) {
+                console.error("Storage Upload Error:", uploadError);
+                throw new Error(`Failed to upload file: ${uploadError.message}`);
+            }
+            // 2. Insert exercise data into the database
+            const exerciseData = {
+                student_id: user.id,
+                title: title,
+                description: description,
+                subject: subject,
+                price: price,
+                request_file_name: file.name,
+                request_file_url: filePath,
+                status: 'new'
+            };
+            const { error: insertError } = await supabase.from('exercises').insert(exerciseData).select() // Select to potentially get the created record back if needed
+            .single(); // Assuming insert returns the single created row
+            if (insertError) {
+                console.error("DB Insert Error:", insertError);
+                // Attempt to clean up the uploaded file if DB insert fails?
+                // await supabase.storage.from('exercise_files').remove([filePath]);
+                throw new Error(`Failed to create exercise request: ${insertError.message}`);
+            }
+            // 3. Success - Close modal and refetch or update state
+            alert("Exercise request submitted successfully!");
+            setIsCreateModalOpen(false);
+            // Simple refetch for now:
+            const { data: updatedExercises, error: refetchError } = await supabase.from('exercises').select(`id, title, subject, price, status, submitted_at, request_file_name, solution_file_name, tutor_id, profiles ( name ) `).eq('student_id', user.id).order('submitted_at', {
+                ascending: false
+            });
+            if (refetchError) throw refetchError;
+            setExercises(updatedExercises || []);
+        } catch (err) {
+            console.error("Error submitting exercise:", err);
+            setError(err.message || "An unexpected error occurred.");
+        } finally{
+            setLoading(false);
+        }
     };
-    const handleDownloadClick = (fileName)=>{
-        console.log(`Attempting to download file: ${fileName}`);
-        alert(`Download simulation: ${fileName}`);
+    const handleDownloadClick = async (filePath, fileName)=>{
+        if (!filePath || !fileName) {
+            setError("File path or name is missing.");
+            return;
+        }
+        setError(null);
+        try {
+            console.log(`Attempting download from path: ${filePath}`);
+            const { data: blob, error: downloadError } = await supabase.storage.from('exercise_files') // Your bucket name
+            .download(filePath);
+            if (downloadError) {
+                console.error("Download Error:", downloadError);
+                throw new Error(`Failed to download file: ${downloadError.message}`);
+            }
+            // Trigger browser download
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', fileName); // Use original file name
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url); // Clean up
+        } catch (err) {
+            console.error("Download failed:", err);
+            setError(err.message || "Could not download the file.");
+            alert(`Error: ${err.message || "Could not download the file."}`); // Show user feedback
+        }
     };
-    const handleSolutionDownloadClick = (solutionFileName)=>{
-        if (!solutionFileName) return;
-        console.log(`Attempting to download solution file: ${solutionFileName}`);
-        alert(`Download simulation: ${solutionFileName}`);
+    const handleSolutionDownloadClick = async (filePath, solutionFileName)=>{
+        if (!filePath || !solutionFileName) {
+            setError("Solution file path or name is missing.");
+            return;
+        }
+        setError(null);
+        try {
+            console.log(`Attempting download from path: ${filePath}`);
+            const { data: blob, error: downloadError } = await supabase.storage.from('exercise_files') // Your bucket name
+            .download(filePath);
+            if (downloadError) {
+                console.error("Download Error:", downloadError);
+                throw new Error(`Failed to download solution file: ${downloadError.message}`);
+            }
+            // Trigger browser download
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', solutionFileName); // Use original file name
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url); // Clean up
+        } catch (err) {
+            console.error("Download failed:", err);
+            setError(err.message || "Could not download the file.");
+            alert(`Error: ${err.message || "Could not download the file."}`); // Show user feedback
+        }
     };
     const filteredExercises = exercises.filter((exercise)=>filterStatus === 'all' || exercise.status === filterStatus);
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1122,47 +1218,58 @@ function StudentExercisesPage() {
                         children: "My Exercises"
                     }, void 0, false, {
                         fileName: "[project]/src/app/dashboard/student/exercises/page.tsx",
-                        lineNumber: 119,
+                        lineNumber: 242,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        className: "flex items-center gap-2",
+                        className: "flex items-center gap-2 flex-wrap",
                         children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Dialog"], {
                                 open: isCreateModalOpen,
                                 onOpenChange: setIsCreateModalOpen,
-                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DialogTrigger"], {
-                                    asChild: true,
-                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
-                                        size: "sm",
-                                        className: "cursor-pointer",
-                                        children: [
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$plus$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Plus$3e$__["Plus"], {
-                                                className: "mr-2 h-4 w-4"
-                                            }, void 0, false, {
-                                                fileName: "[project]/src/app/dashboard/student/exercises/page.tsx",
-                                                lineNumber: 124,
-                                                columnNumber: 17
-                                            }, this),
-                                            " Create Exercise"
-                                        ]
-                                    }, void 0, true, {
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DialogTrigger"], {
+                                        asChild: true,
+                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
+                                            size: "sm",
+                                            className: "cursor-pointer",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$plus$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Plus$3e$__["Plus"], {
+                                                    className: "mr-2 h-4 w-4"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/app/dashboard/student/exercises/page.tsx",
+                                                    lineNumber: 247,
+                                                    columnNumber: 17
+                                                }, this),
+                                                " Create Exercise"
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/src/app/dashboard/student/exercises/page.tsx",
+                                            lineNumber: 246,
+                                            columnNumber: 15
+                                        }, this)
+                                    }, void 0, false, {
                                         fileName: "[project]/src/app/dashboard/student/exercises/page.tsx",
-                                        lineNumber: 123,
-                                        columnNumber: 15
+                                        lineNumber: 245,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$modals$2f$create$2d$exercise$2d$modal$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CreateExerciseModal"], {
+                                        isOpen: isCreateModalOpen,
+                                        onClose: ()=>setIsCreateModalOpen(false),
+                                        onSubmit: handleCreateExerciseSubmit
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/app/dashboard/student/exercises/page.tsx",
+                                        lineNumber: 250,
+                                        columnNumber: 13
                                     }, this)
-                                }, void 0, false, {
-                                    fileName: "[project]/src/app/dashboard/student/exercises/page.tsx",
-                                    lineNumber: 122,
-                                    columnNumber: 13
-                                }, this)
-                            }, void 0, false, {
+                                ]
+                            }, void 0, true, {
                                 fileName: "[project]/src/app/dashboard/student/exercises/page.tsx",
-                                lineNumber: 121,
+                                lineNumber: 244,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                className: "flex items-center gap-2",
+                                className: "flex items-center gap-2 flex-wrap",
                                 children: [
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
                                         variant: filterStatus === 'all' ? 'default' : 'outline',
@@ -1172,7 +1279,7 @@ function StudentExercisesPage() {
                                         children: "All"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/dashboard/student/exercises/page.tsx",
-                                        lineNumber: 129,
+                                        lineNumber: 257,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -1183,18 +1290,18 @@ function StudentExercisesPage() {
                                         children: "New"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/dashboard/student/exercises/page.tsx",
-                                        lineNumber: 137,
+                                        lineNumber: 258,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
-                                        variant: filterStatus === 'in progress' ? 'default' : 'outline',
+                                        variant: filterStatus === 'in_progress' ? 'default' : 'outline',
                                         size: "sm",
-                                        onClick: ()=>setFilterStatus('in progress'),
+                                        onClick: ()=>setFilterStatus('in_progress'),
                                         className: "cursor-pointer",
                                         children: "In Progress"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/dashboard/student/exercises/page.tsx",
-                                        lineNumber: 145,
+                                        lineNumber: 259,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -1205,7 +1312,7 @@ function StudentExercisesPage() {
                                         children: "Solved"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/dashboard/student/exercises/page.tsx",
-                                        lineNumber: 153,
+                                        lineNumber: 260,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -1216,28 +1323,45 @@ function StudentExercisesPage() {
                                         children: "Cancelled"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/dashboard/student/exercises/page.tsx",
-                                        lineNumber: 161,
+                                        lineNumber: 261,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/dashboard/student/exercises/page.tsx",
-                                lineNumber: 128,
+                                lineNumber: 256,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/dashboard/student/exercises/page.tsx",
-                        lineNumber: 120,
+                        lineNumber: 243,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/app/dashboard/student/exercises/page.tsx",
-                lineNumber: 118,
+                lineNumber: 241,
                 columnNumber: 7
             }, this),
-            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+            loading ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                className: "text-center text-muted-foreground py-8",
+                children: "Loading exercises..."
+            }, void 0, false, {
+                fileName: "[project]/src/app/dashboard/student/exercises/page.tsx",
+                lineNumber: 267,
+                columnNumber: 9
+            }, this) : error ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                className: "text-center text-red-600 py-8",
+                children: [
+                    "Error loading exercises: ",
+                    error
+                ]
+            }, void 0, true, {
+                fileName: "[project]/src/app/dashboard/student/exercises/page.tsx",
+                lineNumber: 269,
+                columnNumber: 9
+            }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                 className: "border rounded-lg",
                 children: filteredExercises.length > 0 ? filteredExercises.map((exercise)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         className: "flex flex-col md:flex-row items-start md:items-center justify-between p-4 border-b last:border-b-0 gap-4",
@@ -1250,18 +1374,18 @@ function StudentExercisesPage() {
                                         children: exercise.title
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/dashboard/student/exercises/page.tsx",
-                                        lineNumber: 178,
-                                        columnNumber: 17
+                                        lineNumber: 276,
+                                        columnNumber: 19
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         className: "text-sm text-muted-foreground flex items-center flex-wrap gap-x-3 gap-y-1",
                                         children: [
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                            exercise.subject && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                 children: exercise.subject
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/dashboard/student/exercises/page.tsx",
-                                                lineNumber: 180,
-                                                columnNumber: 19
+                                                lineNumber: 278,
+                                                columnNumber: 42
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                 className: "flex items-center gap-1",
@@ -1270,16 +1394,16 @@ function StudentExercisesPage() {
                                                         className: "h-3 w-3"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/dashboard/student/exercises/page.tsx",
-                                                        lineNumber: 182,
-                                                        columnNumber: 21
+                                                        lineNumber: 280,
+                                                        columnNumber: 23
                                                     }, this),
                                                     " €",
-                                                    exercise.price.toFixed(2)
+                                                    exercise.price?.toFixed(2) ?? 'N/A'
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/dashboard/student/exercises/page.tsx",
-                                                lineNumber: 181,
-                                                columnNumber: 19
+                                                lineNumber: 279,
+                                                columnNumber: 21
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                 className: "flex items-center gap-1",
@@ -1288,75 +1412,76 @@ function StudentExercisesPage() {
                                                         className: "h-3 w-3"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/dashboard/student/exercises/page.tsx",
-                                                        lineNumber: 185,
-                                                        columnNumber: 21
+                                                        lineNumber: 283,
+                                                        columnNumber: 23
                                                     }, this),
                                                     " Submitted: ",
-                                                    exercise.submittedDate
+                                                    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$date$2d$fns$2f$format$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__["format"])(new Date(exercise.submitted_at), 'PP')
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/dashboard/student/exercises/page.tsx",
-                                                lineNumber: 184,
-                                                columnNumber: 19
+                                                lineNumber: 282,
+                                                columnNumber: 21
                                             }, this),
-                                            exercise.status === 'solved' && exercise.solvedByTutor && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                            exercise.status === 'solved' && exercise.profiles?.name && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                 className: "flex items-center gap-1 text-green-600 dark:text-green-500",
                                                 children: [
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$user$2d$check$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__UserCheck$3e$__["UserCheck"], {
                                                         className: "h-3 w-3"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/dashboard/student/exercises/page.tsx",
-                                                        lineNumber: 189,
-                                                        columnNumber: 25
+                                                        lineNumber: 287,
+                                                        columnNumber: 27
                                                     }, this),
                                                     " Solved by: ",
-                                                    exercise.solvedByTutor.name
+                                                    exercise.profiles.name
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/dashboard/student/exercises/page.tsx",
-                                                lineNumber: 188,
-                                                columnNumber: 22
+                                                lineNumber: 286,
+                                                columnNumber: 24
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/dashboard/student/exercises/page.tsx",
-                                        lineNumber: 179,
-                                        columnNumber: 17
+                                        lineNumber: 277,
+                                        columnNumber: 19
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/dashboard/student/exercises/page.tsx",
-                                lineNumber: 177,
-                                columnNumber: 15
+                                lineNumber: 275,
+                                columnNumber: 17
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 className: "flex items-center gap-3 w-full md:w-auto justify-end",
                                 children: [
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$badge$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Badge"], {
                                         variant: getStatusVariant(exercise.status),
-                                        className: "capitalize",
-                                        children: exercise.status
+                                        className: "capitalize min-w-[90px] text-center justify-center",
+                                        children: formatStatusDisplay(exercise.status)
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/dashboard/student/exercises/page.tsx",
-                                        lineNumber: 195,
-                                        columnNumber: 18
+                                        lineNumber: 293,
+                                        columnNumber: 20
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         className: "flex items-center gap-2",
                                         children: [
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
+                                            exercise.request_file_name && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
                                                 variant: "outline",
                                                 size: "sm",
-                                                onClick: ()=>handleDownloadClick(exercise.fileName),
-                                                title: `Download request file (${exercise.fileName})`,
+                                                onClick: ()=>handleDownloadClick(exercise.request_file_url, exercise.request_file_name),
+                                                title: `Download request file (${exercise.request_file_name})`,
                                                 className: "cursor-pointer",
+                                                disabled: !exercise.request_file_url,
                                                 children: [
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$download$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Download$3e$__["Download"], {
                                                         className: "h-4 w-4 md:mr-2"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/dashboard/student/exercises/page.tsx",
-                                                        lineNumber: 206,
-                                                        columnNumber: 25
+                                                        lineNumber: 306,
+                                                        columnNumber: 29
                                                     }, this),
                                                     " ",
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1364,28 +1489,29 @@ function StudentExercisesPage() {
                                                         children: "Request"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/dashboard/student/exercises/page.tsx",
-                                                        lineNumber: 206,
-                                                        columnNumber: 66
+                                                        lineNumber: 306,
+                                                        columnNumber: 70
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/dashboard/student/exercises/page.tsx",
-                                                lineNumber: 199,
-                                                columnNumber: 21
+                                                lineNumber: 298,
+                                                columnNumber: 25
                                             }, this),
-                                            exercise.status === 'solved' && exercise.solutionFileName && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
+                                            exercise.status === 'solved' && exercise.solution_file_name && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
                                                 variant: "secondary",
                                                 size: "sm",
-                                                onClick: ()=>handleSolutionDownloadClick(exercise.solutionFileName),
-                                                title: `Download solution file (${exercise.solutionFileName})`,
+                                                onClick: ()=>handleSolutionDownloadClick(exercise.solution_file_url, exercise.solution_file_name),
+                                                title: `Download solution file (${exercise.solution_file_name})`,
                                                 className: "cursor-pointer",
+                                                disabled: !exercise.solution_file_url,
                                                 children: [
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$file$2d$check$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__FileCheck$3e$__["FileCheck"], {
                                                         className: "h-4 w-4 md:mr-2"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/dashboard/student/exercises/page.tsx",
-                                                        lineNumber: 216,
-                                                        columnNumber: 29
+                                                        lineNumber: 318,
+                                                        columnNumber: 31
                                                     }, this),
                                                     " ",
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1393,62 +1519,57 @@ function StudentExercisesPage() {
                                                         children: "Solution"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/dashboard/student/exercises/page.tsx",
-                                                        lineNumber: 216,
-                                                        columnNumber: 71
+                                                        lineNumber: 318,
+                                                        columnNumber: 73
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/dashboard/student/exercises/page.tsx",
-                                                lineNumber: 209,
-                                                columnNumber: 25
+                                                lineNumber: 310,
+                                                columnNumber: 27
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/dashboard/student/exercises/page.tsx",
-                                        lineNumber: 198,
-                                        columnNumber: 18
+                                        lineNumber: 296,
+                                        columnNumber: 20
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/dashboard/student/exercises/page.tsx",
-                                lineNumber: 194,
-                                columnNumber: 15
+                                lineNumber: 292,
+                                columnNumber: 17
                             }, this)
                         ]
                     }, exercise.id, true, {
                         fileName: "[project]/src/app/dashboard/student/exercises/page.tsx",
-                        lineNumber: 176,
-                        columnNumber: 13
+                        lineNumber: 274,
+                        columnNumber: 15
                     }, this)) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                     className: "text-center text-muted-foreground p-8",
-                    children: "No exercises match the current filter."
+                    children: filterStatus === 'all' ? 'You have not submitted any exercises yet.' : 'No exercises match the current filter.'
                 }, void 0, false, {
                     fileName: "[project]/src/app/dashboard/student/exercises/page.tsx",
-                    lineNumber: 224,
-                    columnNumber: 11
+                    lineNumber: 326,
+                    columnNumber: 13
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/app/dashboard/student/exercises/page.tsx",
-                lineNumber: 173,
-                columnNumber: 7
-            }, this),
-            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$modals$2f$create$2d$exercise$2d$modal$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CreateExerciseModal"], {
-                isOpen: isCreateModalOpen,
-                onClose: ()=>setIsCreateModalOpen(false),
-                onSubmit: handleCreateExerciseSubmit
-            }, void 0, false, {
-                fileName: "[project]/src/app/dashboard/student/exercises/page.tsx",
-                lineNumber: 230,
-                columnNumber: 7
+                lineNumber: 271,
+                columnNumber: 9
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/app/dashboard/student/exercises/page.tsx",
-        lineNumber: 117,
+        lineNumber: 240,
         columnNumber: 5
     }, this);
 }
-_s(StudentExercisesPage, "+fx+iVrEde9wbhFLqqsKe1jeoRY=");
+_s(StudentExercisesPage, "ExIPTqEKAwRG7wBEWJsXaP0UERM=", false, function() {
+    return [
+        __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$context$2f$AuthContext$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useAuth"]
+    ];
+});
 _c = StudentExercisesPage;
 var _c;
 __turbopack_context__.k.register(_c, "StudentExercisesPage");

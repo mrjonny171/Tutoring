@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { ArrowRight, Book, GraduationCap, MessageSquare, Users, Sparkles, Rocket, Target, Github, Twitter, Linkedin, Check } from "lucide-react";
+import { ArrowRight, Book, GraduationCap, MessageSquare, Users, Sparkles, Rocket, Target, Github, Twitter, Linkedin, Check, UserPlus, Search, CalendarPlus, FileText, ClipboardEdit, BadgeCheck, CalendarCheck, FileCheck, DollarSign } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
@@ -67,6 +67,106 @@ export default function Home() {
               </Button>
             </motion.div>
           </motion.div>
+        </div>
+      </section>
+
+      {/* --- How It Works Section (REVISED) --- */}
+      <section id="how-it-works" className="w-full py-20 md:py-24 lg:py-32 bg-muted">
+        <div className="container px-4 md:px-6 mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+            className="flex flex-col items-center justify-center space-y-4 text-center mb-16 max-w-4xl mx-auto"
+          >
+            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl">How TutorHub Works</h2>
+            <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed">
+              Getting started is simple for both students and tutors.
+            </p>
+          </motion.div>
+
+          <div className="grid gap-12 md:gap-16 lg:grid-cols-2 max-w-6xl mx-auto">
+            {/* Student Steps */}
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              viewport={{ once: true }}
+              className="space-y-8"
+            >
+              <h3 className="text-2xl font-semibold text-center md:text-left">For Students</h3>
+              <ul className="space-y-6">
+                <li className="flex items-start gap-4">
+                  <div className="flex-shrink-0 w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center">
+                    <UserPlus className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <h4 className="font-medium text-lg mb-1">1. Sign Up & Find Tutors</h4>
+                    <p className="text-muted-foreground text-sm">Create your free account and easily search or browse profiles of expert tutors.</p>
+                  </div>
+                </li>
+                <li className="flex items-start gap-4">
+                  <div className="flex-shrink-0 w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center">
+                    <CalendarPlus className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <h4 className="font-medium text-lg mb-1">2. Schedule or Request Help</h4>
+                    <p className="text-muted-foreground text-sm">Book live sessions directly through the calendar or submit exercise requests for specific problems.</p>
+                  </div>
+                </li>
+                <li className="flex items-start gap-4">
+                  <div className="flex-shrink-0 w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center">
+                    <GraduationCap className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <h4 className="font-medium text-lg mb-1">3. Learn & Achieve</h4>
+                    <p className="text-muted-foreground text-sm">Attend sessions, receive detailed solutions, track progress on your dashboard, and reach your goals.</p>
+                  </div>
+                </li>
+              </ul>
+            </motion.div>
+
+            {/* Tutor Steps */}
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              viewport={{ once: true }}
+              className="space-y-8"
+            >
+              <h3 className="text-2xl font-semibold text-center md:text-left">For Tutors</h3>
+              <ul className="space-y-6">
+                <li className="flex items-start gap-4">
+                  <div className="flex-shrink-0 w-10 h-10 rounded-full bg-secondary/10 text-secondary flex items-center justify-center">
+                    <ClipboardEdit className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <h4 className="font-medium text-lg mb-1">1. Apply & Get Verified</h4>
+                    <p className="text-muted-foreground text-sm">Showcase your expertise by creating a detailed profile and completing our verification process.</p>
+                  </div>
+                </li>
+                <li className="flex items-start gap-4">
+                  <div className="flex-shrink-0 w-10 h-10 rounded-full bg-secondary/10 text-secondary flex items-center justify-center">
+                    <CalendarCheck className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <h4 className="font-medium text-lg mb-1">2. Manage Your Schedule</h4>
+                    <p className="text-muted-foreground text-sm">Set your availability, accept session bookings, and respond to student exercise requests.</p>
+                  </div>
+                </li>
+                <li className="flex items-start gap-4">
+                  <div className="flex-shrink-0 w-10 h-10 rounded-full bg-secondary/10 text-secondary flex items-center justify-center">
+                    <DollarSign className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <h4 className="font-medium text-lg mb-1">3. Teach, Earn & Grow</h4>
+                    <p className="text-muted-foreground text-sm">Conduct impactful sessions, provide quality solutions, manage payouts, and build your reputation.</p>
+                  </div>
+                </li>
+              </ul>
+            </motion.div>
+          </div>
         </div>
       </section>
 
@@ -143,6 +243,147 @@ export default function Home() {
                 </CardHeader>
               </Card>
             </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* --- Our Core Services Section --- */}
+      <section id="services" className="w-full py-20 md:py-24 lg:py-32 bg-background">
+        <div className="container px-4 md:px-6 mx-auto">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+            className="flex flex-col items-center justify-center space-y-4 text-center mb-12 max-w-4xl mx-auto"
+          >
+            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl">Our Core Services</h2>
+            <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed">
+              Comprehensive support designed for your academic success.
+            </p>
+          </motion.div>
+          
+          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 max-w-6xl mx-auto">
+            {/* Service 1: 1-on-1 Sessions */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              viewport={{ once: true }}
+            >
+              <Card className="h-full hover:shadow-lg transition-shadow duration-300">
+                <CardHeader>
+                  <div className="flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 mb-4">
+                    <Users className="h-6 w-6 text-primary" />
+                  </div>
+                  <CardTitle>Live 1-on-1 Sessions</CardTitle>
+                  <CardDescription>
+                    Connect with tutors via video call for personalized guidance and real-time interaction.
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+            </motion.div>
+
+            {/* Service 2: Exercise Help */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              viewport={{ once: true }}
+            >
+              <Card className="h-full hover:shadow-lg transition-shadow duration-300">
+                <CardHeader>
+                  <div className="flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 mb-4">
+                    <Book className="h-6 w-6 text-primary" />
+                  </div>
+                  <CardTitle>Exercise & Homework Help</CardTitle>
+                  <CardDescription>
+                    Submit specific problems or assignments and receive detailed, step-by-step solutions from experts.
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+            </motion.div>
+
+            {/* Service 3: Flexible Scheduling */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              viewport={{ once: true }}
+            >
+              <Card className="h-full hover:shadow-lg transition-shadow duration-300">
+                <CardHeader>
+                  <div className="flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 mb-4">
+                    <MessageSquare className="h-6 w-6 text-primary" /> {/* Using MessageSquare for scheduling/communication */}
+                  </div>
+                  <CardTitle>Flexible Scheduling</CardTitle>
+                  <CardDescription>
+                    Easily book sessions at times that fit your schedule directly with your chosen tutor.
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+            </motion.div>
+
+             {/* Service 4: Wide Subject Range */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+              viewport={{ once: true }}
+            >
+              <Card className="h-full hover:shadow-lg transition-shadow duration-300">
+                <CardHeader>
+                  <div className="flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 mb-4">
+                    <GraduationCap className="h-6 w-6 text-primary" />
+                  </div>
+                  <CardTitle>Diverse Subjects</CardTitle>
+                  <CardDescription>
+                    Find help across a wide range of academic subjects, from STEM to humanities.
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+            </motion.div>
+            
+             {/* Service 5: Progress Tracking */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.5 }}
+              viewport={{ once: true }}
+            >
+              <Card className="h-full hover:shadow-lg transition-shadow duration-300">
+                <CardHeader>
+                  <div className="flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 mb-4">
+                    <Target className="h-6 w-6 text-primary" />
+                  </div>
+                  <CardTitle>Progress Dashboard</CardTitle>
+                  <CardDescription>
+                    Monitor your session history, exercise status, and performance metrics all in one place.
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+            </motion.div>
+
+             {/* Service 6: Quality Assurance */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.6 }}
+              viewport={{ once: true }}
+            >
+              <Card className="h-full hover:shadow-lg transition-shadow duration-300">
+                <CardHeader>
+                  <div className="flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 mb-4">
+                    <Check className="h-6 w-6 text-primary" />
+                  </div>
+                  <CardTitle>Verified Tutors</CardTitle>
+                  <CardDescription>
+                    Work with confidence knowing all tutors are vetted for expertise and experience.
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+            </motion.div>
+
           </div>
         </div>
       </section>

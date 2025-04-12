@@ -896,6 +896,8 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$date$2d$fns$
 var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$modals$2f$leave$2d$review$2d$modal$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/components/modals/leave-review-modal.tsx [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$modals$2f$session$2d$detail$2d$modal$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/components/modals/session-detail-modal.tsx [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/components/ui/dialog.tsx [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$context$2f$AuthContext$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/context/AuthContext.tsx [app-client] (ecmascript)"); // Import useAuth and UserProfile
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$supabase$2f$client$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/lib/supabase/client.ts [app-client] (ecmascript)"); // Import Supabase client
 ;
 var _s = __turbopack_context__.k.signature();
 "use client";
@@ -908,82 +910,135 @@ var _s = __turbopack_context__.k.signature();
 ;
 ;
 ;
-// Mock data from previous correct version
-const mockSessions = [
-    {
-        id: "1",
-        title: "Calculus Tutoring",
-        start: new Date(2024, 2, 20, 14, 0),
-        end: new Date(2024, 2, 20, 15, 0),
-        tutor: {
-            id: "t1",
-            name: "Dr. Smith",
-            avatar: "/avatars/dr-smith.png"
-        },
-        type: "online",
-        status: "scheduled",
-        reviewLeft: false,
-        canReview: true
-    },
-    {
-        id: "2",
-        title: "Physics Review",
-        start: new Date(2024, 2, 22, 10, 0),
-        end: new Date(2024, 2, 22, 11, 30),
-        tutor: {
-            id: "t2",
-            name: "Prof. Johnson",
-            avatar: "/avatars/prof-johnson.png"
-        },
-        type: "presential",
-        status: "completed",
-        reviewLeft: true,
-        rating: 5,
-        canReview: false
-    },
-    {
-        id: "3",
-        title: "Chemistry Help",
-        start: new Date(2024, 2, 18, 16, 0),
-        end: new Date(2024, 2, 18, 17, 0),
-        tutor: {
-            id: "t1",
-            name: "Dr. Smith",
-            avatar: "/avatars/dr-smith.png"
-        },
-        type: "online",
-        status: "completed",
-        reviewLeft: false,
-        canReview: true
-    }
-];
+;
+;
 function StudentSessionsPage() {
     _s();
+    const { user } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$context$2f$AuthContext$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useAuth"])();
+    const supabase = (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$supabase$2f$client$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["createClient"])();
+    const [sessions, setSessions] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])([]);
+    const [loading, setLoading] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(true);
+    const [error, setError] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
     const [isReviewModalOpen, setIsReviewModalOpen] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
     const [sessionToReview, setSessionToReview] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
     const [isDetailModalOpen, setIsDetailModalOpen] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
     const [selectedSession, setSelectedSession] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
     const [isScheduleModalOpen, setIsScheduleModalOpen] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    // --- Data Fetching --- 
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
+        "StudentSessionsPage.useEffect": ()=>{
+            const fetchSessions = {
+                "StudentSessionsPage.useEffect.fetchSessions": async ()=>{
+                    if (!user) {
+                        setLoading(false);
+                        return;
+                    }
+                    setLoading(true);
+                    setError(null);
+                    try {
+                        const { data, error: sessionsError } = await supabase.from('sessions').select(`
+            id,
+            title,
+            start_time,
+            end_time,
+            type,
+            status,
+            tutor_id,
+            profiles ( * ) 
+          `).eq('student_id', user.id).order('start_time', {
+                            ascending: false
+                        }); // Order by newest first
+                        if (sessionsError) throw sessionsError;
+                        // TODO: Fetch reviews for these sessions to determine `canReview` status
+                        // For now, assume canReview is true if completed
+                        setSessions(data || []);
+                    } catch (err) {
+                        console.error("Error fetching student sessions:", err);
+                        setError(err.message || "Failed to load sessions.");
+                    } finally{
+                        setLoading(false);
+                    }
+                }
+            }["StudentSessionsPage.useEffect.fetchSessions"];
+            fetchSessions();
+        }
+    }["StudentSessionsPage.useEffect"], [
+        user,
+        supabase
+    ]);
+    // --- Event Handlers --- 
     const handleLeaveReviewClick = (session)=>{
-        console.log("handleLeaveReviewClick triggered for session:", session.id);
         setSessionToReview(session);
         setIsReviewModalOpen(true);
-        console.log("State after setting: sessionToReview=", session, "isReviewModalOpen=", true);
     };
     const handleViewDetailsClick = (session)=>{
         setSelectedSession(session);
         setIsDetailModalOpen(true);
     };
-    const handleReviewSubmit = (sessionId, rating, comment)=>{
-        console.log("Review submitted for session", sessionId, {
+    const handleReviewSubmit = async (sessionId, rating, comment)=>{
+        if (!user || !sessionToReview?.tutor_id) {
+            setError("Cannot submit review: User or tutor information missing.");
+            return;
+        }
+        console.log("Submitting review...", {
+            sessionId,
             rating,
             comment
         });
-        // TODO: API call
-        setIsReviewModalOpen(false);
-        setSessionToReview(null);
-    // TODO: Refetch or update local state
+        try {
+            const { error: reviewError } = await supabase.from('reviews').insert({
+                student_id: user.id,
+                tutor_id: sessionToReview.tutor_id,
+                session_id: sessionId,
+                rating: rating,
+                comment: comment
+            });
+            if (reviewError) throw reviewError;
+            // Optimistic update or refetch
+            setSessions((prev)=>prev.map((s)=>s.id === sessionId ? {
+                        ...s,
+                        status: 'completed' /* Assume canReview needs update */ 
+                    } : s)); // Mark as reviewed (need better state)
+            setIsReviewModalOpen(false);
+            setSessionToReview(null);
+            alert("Review submitted successfully!");
+        } catch (err) {
+            console.error("Error submitting review:", err);
+            setError(err.message || "Failed to submit review.");
+        }
     };
+    // --- Rendering --- 
+    if (loading) {
+        return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+            className: "p-6 text-center",
+            children: "Loading sessions..."
+        }, void 0, false, {
+            fileName: "[project]/src/app/dashboard/student/sessions/page.tsx",
+            lineNumber: 131,
+            columnNumber: 12
+        }, this);
+    }
+    if (error) {
+        // Display error state, potentially with a retry option
+        return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+            className: "p-6 space-y-4",
+            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                className: "text-center text-red-600",
+                children: [
+                    "Error: ",
+                    error
+                ]
+            }, void 0, true, {
+                fileName: "[project]/src/app/dashboard/student/sessions/page.tsx",
+                lineNumber: 138,
+                columnNumber: 9
+            }, this)
+        }, void 0, false, {
+            fileName: "[project]/src/app/dashboard/student/sessions/page.tsx",
+            lineNumber: 137,
+            columnNumber: 7
+        }, this);
+    }
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
         className: "space-y-6",
         children: [
@@ -995,7 +1050,7 @@ function StudentSessionsPage() {
                         children: "My Sessions"
                     }, void 0, false, {
                         fileName: "[project]/src/app/dashboard/student/sessions/page.tsx",
-                        lineNumber: 101,
+                        lineNumber: 147,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Dialog"], {
@@ -1010,35 +1065,45 @@ function StudentSessionsPage() {
                                         className: "mr-2 h-4 w-4"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/dashboard/student/sessions/page.tsx",
-                                        lineNumber: 105,
+                                        lineNumber: 151,
                                         columnNumber: 15
                                     }, this),
                                     " Schedule Session"
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/dashboard/student/sessions/page.tsx",
-                                lineNumber: 104,
+                                lineNumber: 150,
                                 columnNumber: 13
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/src/app/dashboard/student/sessions/page.tsx",
-                            lineNumber: 103,
+                            lineNumber: 149,
                             columnNumber: 11
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/src/app/dashboard/student/sessions/page.tsx",
-                        lineNumber: 102,
+                        lineNumber: 148,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/app/dashboard/student/sessions/page.tsx",
-                lineNumber: 100,
+                lineNumber: 146,
                 columnNumber: 7
             }, this),
-            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+            sessions.length === 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                className: "text-center text-muted-foreground py-8",
+                children: "You have no sessions scheduled."
+            }, void 0, false, {
+                fileName: "[project]/src/app/dashboard/student/sessions/page.tsx",
+                lineNumber: 159,
+                columnNumber: 9
+            }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                 className: "grid gap-4 sm:grid-cols-2 lg:grid-cols-3",
-                children: mockSessions.map((session)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
+                children: sessions.map((session)=>{
+                    // Determine if review is possible (placeholder logic)
+                    const canReview = session.status === 'completed'; // Needs real check against reviews table
+                    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
                         className: "flex flex-col",
                         children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardHeader"], {
@@ -1052,8 +1117,8 @@ function StudentSessionsPage() {
                                                     children: session.title
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/dashboard/student/sessions/page.tsx",
-                                                    lineNumber: 116,
-                                                    columnNumber: 19
+                                                    lineNumber: 171,
+                                                    columnNumber: 23
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardDescription"], {
                                                     className: "text-xs flex items-center gap-1.5",
@@ -1062,22 +1127,22 @@ function StudentSessionsPage() {
                                                             className: "h-3 w-3"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/dashboard/student/sessions/page.tsx",
-                                                            lineNumber: 118,
-                                                            columnNumber: 21
+                                                            lineNumber: 173,
+                                                            columnNumber: 25
                                                         }, this),
                                                         " ",
-                                                        session.tutor.name
+                                                        session.profiles?.name ?? 'N/A'
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/app/dashboard/student/sessions/page.tsx",
-                                                    lineNumber: 117,
-                                                    columnNumber: 19
+                                                    lineNumber: 172,
+                                                    columnNumber: 23
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/dashboard/student/sessions/page.tsx",
-                                            lineNumber: 115,
-                                            columnNumber: 17
+                                            lineNumber: 170,
+                                            columnNumber: 21
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$badge$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Badge"], {
                                             variant: session.status === 'completed' ? 'secondary' : 'default',
@@ -1085,19 +1150,19 @@ function StudentSessionsPage() {
                                             children: session.status
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/dashboard/student/sessions/page.tsx",
-                                            lineNumber: 121,
-                                            columnNumber: 17
+                                            lineNumber: 176,
+                                            columnNumber: 21
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/dashboard/student/sessions/page.tsx",
-                                    lineNumber: 114,
-                                    columnNumber: 15
+                                    lineNumber: 169,
+                                    columnNumber: 19
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/src/app/dashboard/student/sessions/page.tsx",
-                                lineNumber: 113,
-                                columnNumber: 13
+                                lineNumber: 168,
+                                columnNumber: 17
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardContent"], {
                                 className: "flex-1 space-y-2",
@@ -1109,28 +1174,28 @@ function StudentSessionsPage() {
                                                 className: "h-4 w-4"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/dashboard/student/sessions/page.tsx",
-                                                lineNumber: 128,
-                                                columnNumber: 17
+                                                lineNumber: 183,
+                                                columnNumber: 21
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                 children: [
-                                                    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$date$2d$fns$2f$format$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__["format"])(session.start, 'PP'),
+                                                    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$date$2d$fns$2f$format$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__["format"])(new Date(session.start_time), 'PP'),
                                                     " (",
-                                                    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$date$2d$fns$2f$format$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__["format"])(session.start, 'p'),
+                                                    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$date$2d$fns$2f$format$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__["format"])(new Date(session.start_time), 'p'),
                                                     " - ",
-                                                    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$date$2d$fns$2f$format$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__["format"])(session.end, 'p'),
+                                                    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$date$2d$fns$2f$format$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__["format"])(new Date(session.end_time), 'p'),
                                                     ")"
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/dashboard/student/sessions/page.tsx",
-                                                lineNumber: 129,
-                                                columnNumber: 17
+                                                lineNumber: 185,
+                                                columnNumber: 21
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/dashboard/student/sessions/page.tsx",
-                                        lineNumber: 127,
-                                        columnNumber: 15
+                                        lineNumber: 182,
+                                        columnNumber: 19
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         className: "text-sm flex items-center gap-1.5 text-muted-foreground capitalize",
@@ -1139,33 +1204,33 @@ function StudentSessionsPage() {
                                                 className: "h-4 w-4"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/dashboard/student/sessions/page.tsx",
-                                                lineNumber: 132,
-                                                columnNumber: 47
+                                                lineNumber: 188,
+                                                columnNumber: 51
                                             }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$building$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Building$3e$__["Building"], {
                                                 className: "h-4 w-4"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/dashboard/student/sessions/page.tsx",
-                                                lineNumber: 132,
-                                                columnNumber: 79
+                                                lineNumber: 188,
+                                                columnNumber: 83
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                 children: session.type
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/dashboard/student/sessions/page.tsx",
-                                                lineNumber: 133,
-                                                columnNumber: 18
+                                                lineNumber: 189,
+                                                columnNumber: 22
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/dashboard/student/sessions/page.tsx",
-                                        lineNumber: 131,
-                                        columnNumber: 15
+                                        lineNumber: 187,
+                                        columnNumber: 19
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/dashboard/student/sessions/page.tsx",
-                                lineNumber: 126,
-                                columnNumber: 13
+                                lineNumber: 181,
+                                columnNumber: 17
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardFooter"], {
                                 className: "pt-4",
@@ -1175,7 +1240,7 @@ function StudentSessionsPage() {
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                             className: "flex-1",
                                             children: [
-                                                session.status === 'completed' && session.canReview && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
+                                                session.status === 'completed' && canReview && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
                                                     variant: "outline",
                                                     size: "sm",
                                                     className: "w-full hover:bg-primary hover:text-black cursor-pointer",
@@ -1185,17 +1250,17 @@ function StudentSessionsPage() {
                                                             className: "mr-2 h-4 w-4"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/dashboard/student/sessions/page.tsx",
-                                                            lineNumber: 146,
-                                                            columnNumber: 25
+                                                            lineNumber: 202,
+                                                            columnNumber: 29
                                                         }, this),
                                                         " Leave Review"
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/app/dashboard/student/sessions/page.tsx",
-                                                    lineNumber: 140,
-                                                    columnNumber: 22
+                                                    lineNumber: 196,
+                                                    columnNumber: 26
                                                 }, this),
-                                                session.status === 'completed' && !session.canReview && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
+                                                session.status === 'completed' && !canReview && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
                                                     variant: "outline",
                                                     size: "sm",
                                                     disabled: true,
@@ -1205,32 +1270,35 @@ function StudentSessionsPage() {
                                                             className: "mr-2 h-4 w-4"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/dashboard/student/sessions/page.tsx",
-                                                            lineNumber: 151,
-                                                            columnNumber: 25
+                                                            lineNumber: 207,
+                                                            columnNumber: 29
                                                         }, this),
                                                         " Review Submitted"
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/app/dashboard/student/sessions/page.tsx",
-                                                    lineNumber: 150,
-                                                    columnNumber: 22
+                                                    lineNumber: 206,
+                                                    columnNumber: 26
                                                 }, this),
                                                 session.status !== 'completed' && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
                                                     variant: "secondary",
                                                     size: "sm",
                                                     className: "w-full cursor-not-allowed",
                                                     disabled: true,
-                                                    children: "Session Upcoming"
-                                                }, void 0, false, {
+                                                    children: [
+                                                        "Session ",
+                                                        session.status === 'scheduled' ? 'Upcoming' : 'Cancelled'
+                                                    ]
+                                                }, void 0, true, {
                                                     fileName: "[project]/src/app/dashboard/student/sessions/page.tsx",
-                                                    lineNumber: 155,
-                                                    columnNumber: 22
+                                                    lineNumber: 211,
+                                                    columnNumber: 26
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/dashboard/student/sessions/page.tsx",
-                                            lineNumber: 138,
-                                            columnNumber: 17
+                                            lineNumber: 194,
+                                            columnNumber: 21
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
                                             variant: "outline",
@@ -1242,72 +1310,76 @@ function StudentSessionsPage() {
                                                 className: "h-4 w-4"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/dashboard/student/sessions/page.tsx",
-                                                lineNumber: 167,
-                                                columnNumber: 19
+                                                lineNumber: 223,
+                                                columnNumber: 23
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/dashboard/student/sessions/page.tsx",
-                                            lineNumber: 160,
-                                            columnNumber: 17
+                                            lineNumber: 216,
+                                            columnNumber: 21
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/dashboard/student/sessions/page.tsx",
-                                    lineNumber: 137,
-                                    columnNumber: 15
+                                    lineNumber: 193,
+                                    columnNumber: 19
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/src/app/dashboard/student/sessions/page.tsx",
-                                lineNumber: 136,
-                                columnNumber: 13
+                                lineNumber: 192,
+                                columnNumber: 17
                             }, this)
                         ]
                     }, session.id, true, {
                         fileName: "[project]/src/app/dashboard/student/sessions/page.tsx",
-                        lineNumber: 112,
-                        columnNumber: 11
-                    }, this))
+                        lineNumber: 167,
+                        columnNumber: 15
+                    }, this);
+                })
             }, void 0, false, {
                 fileName: "[project]/src/app/dashboard/student/sessions/page.tsx",
-                lineNumber: 110,
-                columnNumber: 7
+                lineNumber: 161,
+                columnNumber: 9
             }, this),
-            sessionToReview && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$modals$2f$leave$2d$review$2d$modal$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["LeaveReviewModal"], {
+            sessionToReview && sessionToReview.profiles && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$modals$2f$leave$2d$review$2d$modal$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["LeaveReviewModal"], {
                 isOpen: isReviewModalOpen,
                 onClose: ()=>setIsReviewModalOpen(false),
                 targetUser: {
-                    id: sessionToReview.tutor.id,
-                    name: sessionToReview.tutor.name,
-                    avatar: sessionToReview.tutor.avatar,
+                    id: sessionToReview.tutor_id,
+                    name: sessionToReview.profiles.name ?? 'Tutor',
+                    avatar: sessionToReview.profiles.avatar_url ?? '',
                     role: "TUTOR"
                 },
                 onSubmit: (rating, reviewText)=>{
-                    if (sessionToReview) {
-                        handleReviewSubmit(sessionToReview.id, rating, reviewText);
-                    }
+                    handleReviewSubmit(sessionToReview.id, rating, reviewText);
                 }
             }, void 0, false, {
                 fileName: "[project]/src/app/dashboard/student/sessions/page.tsx",
-                lineNumber: 177,
+                lineNumber: 235,
                 columnNumber: 9
             }, this),
             selectedSession && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$modals$2f$session$2d$detail$2d$modal$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SessionDetailModal"], {
                 isOpen: isDetailModalOpen,
                 onClose: ()=>setIsDetailModalOpen(false),
+                // Pass the fetched session data - ensure modal props match
                 session: selectedSession
             }, void 0, false, {
                 fileName: "[project]/src/app/dashboard/student/sessions/page.tsx",
-                lineNumber: 196,
+                lineNumber: 252,
                 columnNumber: 9
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/app/dashboard/student/sessions/page.tsx",
-        lineNumber: 99,
+        lineNumber: 145,
         columnNumber: 5
     }, this);
 }
-_s(StudentSessionsPage, "GT3WByNZYvXqfQuZgrl5xWt5ZKM=");
+_s(StudentSessionsPage, "camTEsYWhc6gpnI0pNHHH0jruPA=", false, function() {
+    return [
+        __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$context$2f$AuthContext$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useAuth"]
+    ];
+});
 _c = StudentSessionsPage;
 var _c;
 __turbopack_context__.k.register(_c, "StudentSessionsPage");

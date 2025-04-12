@@ -3,16 +3,28 @@
   "middleware": {
     "/": {
       "files": [
-        "server/edge/chunks/_0d3699dc._.js",
-        "server/edge/chunks/[root-of-the-server]__dc15d093._.js",
-        "server/edge/chunks/edge-wrapper_594fdf6a.js"
+        "server/edge/chunks/_e159f406._.js",
+        "server/edge/chunks/[root-of-the-server]__de110ef0._.js",
+        "server/edge/chunks/edge-wrapper_65c7656f.js"
       ],
       "name": "middleware",
       "page": "/",
       "matchers": [
         {
-          "regexp": "/:nextData(_next/data/[^/]{1,})?/dashboard{(\\\\.json)}?",
-          "originalSource": "/dashboard"
+          "regexp": "/:nextData(_next/data/[^/]{1,})?/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*){(\\\\.json)}?",
+          "originalSource": "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)"
+        },
+        {
+          "regexp": "/:nextData(_next/data/[^/]{1,})?/dashboard/:path*{(\\\\.json)}?",
+          "originalSource": "/dashboard/:path*"
+        },
+        {
+          "regexp": "/:nextData(_next/data/[^/]{1,})?/login{(\\\\.json)}?",
+          "originalSource": "/login"
+        },
+        {
+          "regexp": "/:nextData(_next/data/[^/]{1,})?/register{(\\\\.json)}?",
+          "originalSource": "/register"
         }
       ],
       "wasm": [],
@@ -20,9 +32,9 @@
       "env": {
         "__NEXT_BUILD_ID": "development",
         "NEXT_SERVER_ACTIONS_ENCRYPTION_KEY": "FTR70xOdWPdfaqUNR57GoTkgDK8GGFwwStq1cDA4KXM=",
-        "__NEXT_PREVIEW_MODE_ID": "0913481139b97eeafb90e179e87806c5",
-        "__NEXT_PREVIEW_MODE_ENCRYPTION_KEY": "632d19e9e71eeed100744c3b4ba46e2665052ca3628de525068c1cc379efd0f4",
-        "__NEXT_PREVIEW_MODE_SIGNING_KEY": "5bbd2638106d4657518e0715de55fb0e6f58f3e07bf704f5468bab9c20cebcc0"
+        "__NEXT_PREVIEW_MODE_ID": "a7dec5cab07375c20d9e24bb1557ee95",
+        "__NEXT_PREVIEW_MODE_ENCRYPTION_KEY": "86b37a904d969a4707c439548291b4aac958abf1d9cdce89243b73b79a569c9a",
+        "__NEXT_PREVIEW_MODE_SIGNING_KEY": "5ca08142a6d11293752b6b0260e394201e74fb5414bb3f4de5028370c25d94eb"
       }
     }
   },
