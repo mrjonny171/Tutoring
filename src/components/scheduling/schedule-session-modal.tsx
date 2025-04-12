@@ -22,6 +22,7 @@ interface ScheduleSessionModalProps {
   onClose: () => void;
   role: "STUDENT" | "TUTOR";
   availableUsers: User[];
+  preSelectedUserId?: string;
 }
 
 const timeSlots = Array.from({ length: 24 }, (_, i) => {
@@ -36,11 +37,12 @@ export function ScheduleSessionModal({
   onClose,
   role,
   availableUsers,
+  preSelectedUserId,
 }: ScheduleSessionModalProps) {
   const [date, setDate] = useState<string>(format(new Date(), "yyyy-MM-dd"));
   const [time, setTime] = useState<string>("");
   const [duration, setDuration] = useState<string>("60");
-  const [selectedUser, setSelectedUser] = useState<string>("");
+  const [selectedUser, setSelectedUser] = useState<string>(preSelectedUserId || "");
   const [notes, setNotes] = useState<string>("");
   const [sessionType, setSessionType] = useState<SessionType>("online");
 

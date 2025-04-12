@@ -19,6 +19,7 @@ export function DashboardLayout({ children, userRole }: DashboardLayoutProps) {
   const studentNavItems = [
     { href: "/dashboard/student", label: "Overview" },
     { href: "/dashboard/student/sessions", label: "My Sessions" },
+    { href: "/dashboard/student/tutors", label: "My Tutors" },
     { href: "/dashboard/student/exercises", label: "Exercises" },
     { href: "/dashboard/student/documents", label: "Documents" },
   ];

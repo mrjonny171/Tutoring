@@ -1,24 +1,14 @@
 {
   "/_not-found/page": "app/_not-found/page.js",
   "/api/auth/[...nextauth]/route": "app/api/auth/[...nextauth]/route.js",
-  "/dashboard/documents/page": "app/dashboard/documents/page.js",
-  "/dashboard/exercises/page": "app/dashboard/exercises/page.js",
-  "/dashboard/page": "app/dashboard/page.js",
-  "/dashboard/sessions/page": "app/dashboard/sessions/page.js",
-  "/dashboard/student/documents/page": "app/dashboard/student/documents/page.js",
   "/dashboard/student/exercises/page": "app/dashboard/student/exercises/page.js",
   "/dashboard/student/page": "app/dashboard/student/page.js",
   "/dashboard/student/sessions/page": "app/dashboard/student/sessions/page.js",
-  "/dashboard/students/page": "app/dashboard/students/page.js",
+  "/dashboard/student/tutors/page": "app/dashboard/student/tutors/page.js",
   "/dashboard/tutor/documents/page": "app/dashboard/tutor/documents/page.js",
   "/dashboard/tutor/exercises/page": "app/dashboard/tutor/exercises/page.js",
   "/dashboard/tutor/page": "app/dashboard/tutor/page.js",
   "/dashboard/tutor/sessions/page": "app/dashboard/tutor/sessions/page.js",
   "/dashboard/tutor/students/page": "app/dashboard/tutor/students/page.js",
-  "/dashboard/tutors/page": "app/dashboard/tutors/page.js",
-  "/favicon.ico/route": "app/favicon.ico/route.js",
-  "/login/page": "app/login/page.js",
-  "/page": "app/page.js",
-  "/pages/page": "app/pages/page.js",
-  "/register/page": "app/register/page.js"
+  "/favicon.ico/route": "app/favicon.ico/route.js"
 }

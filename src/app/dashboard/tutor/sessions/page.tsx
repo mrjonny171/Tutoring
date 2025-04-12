@@ -1,181 +1,158 @@
 "use client";
 
-import { DashboardWrapper } from "@/components/layout/dashboard-wrapper";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Calendar, List, Plus } from "lucide-react";
-import Link from "next/link";
 import { useState } from "react";
-import { Calendar as BigCalendar, dateFnsLocalizer, Event } from "react-big-calendar";
-import { format, parse, startOfWeek, getDay } from "date-fns";
-import "react-big-calendar/lib/css/react-big-calendar.css";
+// NOTE: DashboardWrapper should be handled by the layout file
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { CalendarPlus, Clock, User, Circle, MessageSquare, Star, Globe, Building } from "lucide-react";
+import { format } from 'date-fns';
 import { ScheduleSessionModal } from "@/components/scheduling/schedule-session-modal";
+import Link from "next/link";
+import { SessionDetailModal } from "@/components/modals/session-detail-modal";
 
-const locales = {
-  "en-US": require("date-fns/locale/en-US"),
-};
-
-const localizer = dateFnsLocalizer({
-  format,
-  parse,
-  startOfWeek,
-  getDay,
-  locales,
-});
-
-interface Session extends Event {
+// Interface from previous correct version
+interface Session {
   id: string;
+  title: string;
+  start: Date;
+  end: Date;
   student: {
+    id: string;
     name: string;
     avatar: string;
   };
-  status: "upcoming" | "completed";
-  type: "online" | "in-person";
+  status: "scheduled" | "completed" | "cancelled";
+  type: "presential" | "online";
+  rating?: number;
 }
 
-// Mock data for demonstration
+// Mock data from previous correct version
 const mockSessions: Session[] = [
   {
     id: "1",
-    title: "Calculus Session",
-    start: new Date(2024, 2, 20, 14, 0), // March 20, 2024, 2:00 PM
-    end: new Date(2024, 2, 20, 15, 0), // March 20, 2024, 3:00 PM
-    student: {
-      name: "John Doe",
-      avatar: "/avatars/john-doe.png",
-    },
-    status: "upcoming",
+    title: "Calculus Fundamentals",
+    start: new Date(2024, 2, 20, 14, 0),
+    end: new Date(2024, 2, 20, 15, 0),
+    student: { id: "s1", name: "Alice Johnson", avatar: "/avatars/alice.png" },
+    status: "scheduled",
     type: "online",
   },
   {
     id: "2",
-    title: "Physics Review",
-    start: new Date(2024, 2, 21, 10, 0), // March 21, 2024, 10:00 AM
-    end: new Date(2024, 2, 21, 11, 30), // March 21, 2024, 11:30 AM
-    student: {
-      name: "Jane Smith",
-      avatar: "/avatars/jane-smith.png",
-    },
-    status: "upcoming",
-    type: "in-person",
+    title: "Advanced Physics",
+    start: new Date(2024, 2, 22, 10, 0),
+    end: new Date(2024, 2, 22, 11, 30),
+    student: { id: "s2", name: "Bob Williams", avatar: "/avatars/bob.png" },
+    status: "completed",
+    type: "presential",
   },
   {
     id: "3",
-    title: "Past Session",
-    start: new Date(2024, 2, 15, 14, 0), // March 15, 2024, 2:00 PM
-    end: new Date(2024, 2, 15, 15, 0), // March 15, 2024, 3:00 PM
-    student: {
-      name: "John Doe",
-      avatar: "/avatars/john-doe.png",
-    },
-    status: "completed",
+    title: "Organic Chemistry Prep",
+    start: new Date(2024, 2, 18, 16, 0),
+    end: new Date(2024, 2, 18, 17, 0),
+    student: { id: "s1", name: "Alice Johnson", avatar: "/avatars/alice.png" },
+    status: "cancelled",
     type: "online",
+  },
+  {
+    id: "4",
+    title: "Linear Algebra Review",
+    start: new Date(2024, 2, 25, 9, 0),
+    end: new Date(2024, 2, 25, 10, 0),
+    student: { id: "s3", name: "Charlie Brown", avatar: "/avatars/charlie.png" },
+    status: "scheduled",
+    type: "presential",
   },
 ];
 
 export default function TutorSessionsPage() {
-  const [view, setView] = useState<"list" | "calendar">("list");
   const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+  const [selectedSession, setSelectedSession] = useState<Session | null>(null);
+  
+  const availableStudents = mockSessions
+    .map(s => s.student)
+    .filter((v, i, a) => a.findIndex(t => t.id === v.id) === i);
 
-  // Mock available students - replace with actual data
-  const availableStudents = [
-    { id: "1", name: "John Doe", avatar: "/avatars/john-doe.png" },
-    { id: "2", name: "Jane Smith", avatar: "/avatars/jane-smith.png" },
-  ];
-
-  const handleSelectEvent = (event: Session) => {
-    // Handle event click
-    console.log("Selected event:", event);
+  const handleViewDetailsClick = (session: Session) => {
+    setSelectedSession(session);
+    setIsDetailModalOpen(true);
   };
 
   return (
-    <DashboardWrapper>
-      <div className="container mx-auto py-8">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold">Sessions</h1>
-          <div className="flex gap-2">
-            <Button variant="outline" size="sm" onClick={() => setView(view === "list" ? "calendar" : "list")}>
-              {view === "list" ? <Calendar className="h-4 w-4 mr-2" /> : <List className="h-4 w-4 mr-2" />}
-              {view === "list" ? "Calendar View" : "List View"}
-            </Button>
-            <Button onClick={() => setIsScheduleModalOpen(true)}>
-              <Plus className="h-4 w-4 mr-2" />
-              Schedule Session
-            </Button>
-          </div>
+    // Explicitly NO DashboardWrapper here
+    <div className="container mx-auto py-8">
+      {/* Header */}
+      <div className="flex justify-between items-center mb-8">
+        <div>
+          <h1 className="text-2xl font-bold">Sessions</h1>
+          <p className="text-muted-foreground">View and manage your upcoming and past sessions.</p>
         </div>
+        <Button onClick={() => setIsScheduleModalOpen(true)}>
+          <CalendarPlus className="mr-2 h-4 w-4" /> Schedule Session
+        </Button>
+      </div>
 
-        {view === "list" ? (
-          <div className="space-y-4">
-            <Card>
-              <CardContent className="p-0">
-                <div className="divide-y">
-                  {mockSessions.map((session) => (
-                    <div key={session.id} className="p-4 hover:bg-muted/50 transition-colors">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-4">
-                          <div className="flex flex-col">
-                            <h3 className="font-semibold">{session.title}</h3>
-                            <p className="text-sm text-muted-foreground">
-                              {session.start && session.end && (
-                                <>
-                                  {format(session.start, "MMMM d, yyyy")} • {format(session.start, "h:mm a")} - {format(session.end, "h:mm a")}
-                                </>
-                              )}
-                            </p>
-                          </div>
-                        </div>
-                        <div className="flex items-center space-x-4">
-                          <div className="flex items-center space-x-2">
-                            <span className="text-sm text-muted-foreground">{session.student.name}</span>
-                            <span className="text-sm text-muted-foreground">•</span>
-                            <span className="text-sm text-muted-foreground capitalize">{session.type}</span>
-                          </div>
-                          <Button variant="outline" size="sm" asChild>
-                            <Link href={`/dashboard/tutor/sessions/${session.id}`}>
-                              View Details
-                            </Link>
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
+      {/* Card Grid Layout */}
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {mockSessions.map((session) => (
+          <Card 
+            key={session.id} 
+            className="flex flex-col transition-all duration-200 ease-in-out hover:shadow-lg hover:-translate-y-1"
+          >
+            <CardHeader>
+              <div className="flex justify-between items-start">
+                <div>
+                  <CardTitle className="text-lg mb-1">{session.title}</CardTitle>
+                  <CardDescription className="text-xs flex items-center gap-1.5">
+                    <User className="h-3 w-3"/> {session.student.name}
+                  </CardDescription>
                 </div>
-              </CardContent>
-            </Card>
-          </div>
-        ) : (
-          <Card>
-            <CardContent className="p-4">
-              <div className="h-[600px]">
-                <BigCalendar
-                  localizer={localizer}
-                  events={mockSessions}
-                  startAccessor="start"
-                  endAccessor="end"
-                  onSelectEvent={handleSelectEvent}
-                  views={["month", "week", "day"]}
-                  defaultView="week"
-                  style={{ height: "100%" }}
-                  eventPropGetter={(event: Session) => ({
-                    style: {
-                      backgroundColor: event.status === "completed" ? "#e5e7eb" : "#3b82f6",
-                      border: "none",
-                    },
-                  })}
-                />
+                <Badge variant={session.status === 'completed' ? 'secondary' : 'default'} className="capitalize">
+                  {session.status}
+                </Badge>
+              </div>
+            </CardHeader>
+            <CardContent className="flex-1 space-y-2">
+              <div className="text-sm flex items-center gap-1.5 text-muted-foreground">
+                <Clock className="h-4 w-4"/>
+                <span>{format(session.start, 'PP')} ({format(session.start, 'p')} - {format(session.end, 'p')})</span>
+              </div>
+              <div className="text-sm flex items-center gap-1.5 text-muted-foreground capitalize">
+                {session.type === 'online' ? <Globe className="h-4 w-4" /> : <Building className="h-4 w-4" />}
+                <span>{session.type}</span>
               </div>
             </CardContent>
+            <CardFooter className="pt-4">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="w-full transition-all duration-150 ease-in-out hover:bg-muted/50 hover:scale-[1.03]" 
+                onClick={() => handleViewDetailsClick(session)}
+              >
+                <MessageSquare className="mr-2 h-4 w-4" /> View Details
+              </Button>
+            </CardFooter>
           </Card>
-        )}
-
-        <ScheduleSessionModal
-          isOpen={isScheduleModalOpen}
-          onClose={() => setIsScheduleModalOpen(false)}
-          role="TUTOR"
-          availableUsers={availableStudents}
-        />
+        ))}
       </div>
-    </DashboardWrapper>
+
+      {/* Scheduling Modal */}
+      <ScheduleSessionModal
+        isOpen={isScheduleModalOpen}
+        onClose={() => setIsScheduleModalOpen(false)}
+        role="TUTOR"
+        availableUsers={availableStudents}
+      />
+      
+      {/* Session Detail Modal */}
+      <SessionDetailModal
+        isOpen={isDetailModalOpen}
+        onClose={() => setIsDetailModalOpen(false)}
+        session={selectedSession}
+      />
+    </div>
   );
 } 

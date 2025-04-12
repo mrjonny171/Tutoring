@@ -1,6 +1,5 @@
 "use client";
 
-import { DashboardWrapper } from "@/components/layout/dashboard-wrapper";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,9 +16,28 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { ScheduleSessionModal } from "@/components/scheduling/schedule-session-modal";
+
+// Define Student interface based on usage (adjust if needed)
+interface Student {
+  id: string;
+  name: string;
+  email: string;
+  avatar: string;
+  subjects: string[];
+  sessionsCompleted: number;
+  upcomingSessions: number;
+  averageRating: number;
+  lastSession: string;
+  status: string;
+  progress: number;
+  attendanceRate: number;
+  performance: { subject: string, score: number }[];
+  sessionHistory: { date: string, duration: number, topic: string }[];
+}
 
 // Mock data for demonstration
-const mockStudents = [
+const mockStudents: Student[] = [
   {
     id: "1",
     name: "John Doe",
@@ -66,10 +84,19 @@ const mockStudents = [
   }
 ];
 
+// Placeholder for actual tutor data
+const mockTutor = {
+  id: "tutor123",
+  name: "Current Tutor Name", // Replace with actual tutor name
+  // Add other necessary tutor fields if the modal requires them
+};
+
 export default function TutorStudentsPage() {
   const [expandedStudents, setExpandedStudents] = useState<Set<string>>(new Set());
   const [inviteEmail, setInviteEmail] = useState("");
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
+  const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
+  const [selectedStudentForScheduling, setSelectedStudentForScheduling] = useState<Student | null>(null);
 
   const toggleStudent = (studentId: string) => {
     const newExpanded = new Set(expandedStudents);
@@ -89,129 +116,148 @@ export default function TutorStudentsPage() {
     setIsInviteModalOpen(false);
   };
 
-  return (
-    <DashboardWrapper>
-      <div className="container mx-auto py-8">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold">Students</h1>
-          <div className="flex gap-2">
-            <div className="relative">
-              <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-              <Input placeholder="Search students..." className="pl-8" />
-            </div>
-            <Dialog open={isInviteModalOpen} onOpenChange={setIsInviteModalOpen}>
-              <DialogTrigger asChild>
-                <Button>Invite Student</Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Invite a Student</DialogTitle>
-                  <DialogDescription>
-                    Enter the student's email address to send them an invitation.
-                  </DialogDescription>
-                </DialogHeader>
-                <form onSubmit={handleInvite} className="space-y-4">
-                  <div className="space-y-2">
-                    <label htmlFor="email" className="text-sm font-medium">
-                      Email Address
-                    </label>
-                    <Input
-                      id="email"
-                      type="email"
-                      placeholder="student@example.com"
-                      value={inviteEmail}
-                      onChange={(e) => setInviteEmail(e.target.value)}
-                      required
-                    />
-                  </div>
-                  <div className="flex justify-end gap-2">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() => setIsInviteModalOpen(false)}
-                    >
-                      Cancel
-                    </Button>
-                    <Button type="submit">Send Invitation</Button>
-                  </div>
-                </form>
-              </DialogContent>
-            </Dialog>
-          </div>
-        </div>
+  const handleScheduleClick = (student: Student) => {
+    setSelectedStudentForScheduling(student);
+    setIsScheduleModalOpen(true);
+  };
 
-        <Card>
-          <CardContent className="p-0">
-            <div className="divide-y">
-              {mockStudents.map((student) => (
-                <div key={student.id}>
-                  <div 
-                    className="flex items-center justify-between p-4 hover:bg-muted/50 cursor-pointer transition-colors"
-                    onClick={() => toggleStudent(student.id)}
+  return (
+    <div className="container mx-auto py-8">
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-3xl font-bold">Students</h1>
+        <div className="flex gap-2">
+          <div className="relative">
+            <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Input placeholder="Search students..." className="pl-8" />
+          </div>
+          <Dialog open={isInviteModalOpen} onOpenChange={setIsInviteModalOpen}>
+            <DialogTrigger asChild>
+              <Button>Invite Student</Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Invite a Student</DialogTitle>
+                <DialogDescription>
+                  Enter the student's email address to send them an invitation.
+                </DialogDescription>
+              </DialogHeader>
+              <form onSubmit={handleInvite} className="space-y-4">
+                <div className="space-y-2">
+                  <label htmlFor="email" className="text-sm font-medium">
+                    Email Address
+                  </label>
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="student@example.com"
+                    value={inviteEmail}
+                    onChange={(e) => setInviteEmail(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="flex justify-end gap-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setIsInviteModalOpen(false)}
                   >
-                    <div className="flex items-center space-x-4">
-                      <Avatar className="h-10 w-10">
-                        <AvatarImage src={student.avatar} />
-                        <AvatarFallback className="bg-primary/10 text-primary">
-                          {student.name.split(" ").map(n => n[0]).join("")}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <h3 className="font-semibold">{student.name}</h3>
-                        <p className="text-sm text-muted-foreground">{student.email}</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center space-x-6">
-                      <div className="flex items-center space-x-2">
-                        <TrendingUp className="h-4 w-4 text-primary" />
-                        <span className="text-sm font-medium">{student.progress}%</span>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <Star className="h-4 w-4 text-primary" />
-                        <span className="text-sm font-medium">{student.averageRating}</span>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <Calendar className="h-4 w-4 text-primary" />
-                        <span className="text-sm font-medium">{student.upcomingSessions} upcoming</span>
-                      </div>
-                      {expandedStudents.has(student.id) ? (
-                        <ChevronUp className="h-4 w-4 text-muted-foreground" />
-                      ) : (
-                        <ChevronDown className="h-4 w-4 text-muted-foreground" />
-                      )}
+                    Cancel
+                  </Button>
+                  <Button type="submit">Send Invitation</Button>
+                </div>
+              </form>
+            </DialogContent>
+          </Dialog>
+        </div>
+      </div>
+
+      <Card>
+        <CardContent className="p-0">
+          <div className="divide-y">
+            {mockStudents.map((student) => (
+              <div key={student.id}>
+                <div 
+                  className="flex items-center justify-between p-4 hover:bg-muted/50 cursor-pointer transition-colors"
+                  onClick={() => toggleStudent(student.id)}
+                >
+                  <div className="flex items-center space-x-4">
+                    <Avatar className="h-10 w-10">
+                      <AvatarImage src={student.avatar} />
+                      <AvatarFallback className="bg-primary/10 text-primary">
+                        {student.name.split(" ").map(n => n[0]).join("")}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <h3 className="font-semibold">{student.name}</h3>
+                      <p className="text-sm text-muted-foreground">{student.email}</p>
                     </div>
                   </div>
-                  
-                  {expandedStudents.has(student.id) && (
-                    <div className="p-4 bg-muted/30 transition-all duration-200">
-                      <div className="flex items-start justify-between">
-                        <div className="space-y-2">
-                          <h4 className="font-semibold text-sm text-muted-foreground">Subjects</h4>
-                          <div className="flex flex-wrap gap-2">
-                            {student.subjects.map((subject) => (
-                              <Badge key={subject} variant="secondary" className="bg-primary/10 text-primary hover:bg-primary/20">
-                                {subject}
-                              </Badge>
-                            ))}
-                          </div>
-                        </div>
-                        <div className="flex gap-2">
-                          <Button variant="outline" size="sm" className="bg-background" asChild>
-                            <Link href={`/dashboard/tutor/students/${student.id}/schedule`}>
-                              <Calendar className="h-4 w-4 mr-2" />
-                              Schedule Session
-                            </Link>
-                          </Button>
+                  <div className="flex items-center space-x-6">
+                    <div className="flex items-center space-x-2">
+                      <TrendingUp className="h-4 w-4 text-primary" />
+                      <span className="text-sm font-medium">{student.progress}%</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Star className="h-4 w-4 text-primary" />
+                      <span className="text-sm font-medium">{student.averageRating}</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Calendar className="h-4 w-4 text-primary" />
+                      <span className="text-sm font-medium">{student.upcomingSessions} upcoming</span>
+                    </div>
+                    {expandedStudents.has(student.id) ? (
+                      <ChevronUp className="h-4 w-4 text-muted-foreground" />
+                    ) : (
+                      <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                    )}
+                  </div>
+                </div>
+                
+                {expandedStudents.has(student.id) && (
+                  <div className="p-4 bg-muted/30 transition-all duration-200">
+                    <div className="flex items-start justify-between">
+                      <div className="space-y-2">
+                        <h4 className="font-semibold text-sm text-muted-foreground">Subjects</h4>
+                        <div className="flex flex-wrap gap-2">
+                          {student.subjects.map((subject) => (
+                            <Badge key={subject} variant="secondary" className="bg-primary/10 text-primary hover:bg-primary/20">
+                              {subject}
+                            </Badge>
+                          ))}
                         </div>
                       </div>
+                      <div className="flex gap-2">
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          className="bg-background" 
+                          onClick={() => handleScheduleClick(student)} 
+                        >
+                          <Calendar className="h-4 w-4 mr-2" />
+                          Schedule Session
+                        </Button>
+                      </div>
                     </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    </DashboardWrapper>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      {selectedStudentForScheduling && (
+        <ScheduleSessionModal
+          isOpen={isScheduleModalOpen}
+          onClose={() => {
+            setIsScheduleModalOpen(false);
+            setSelectedStudentForScheduling(null);
+          }}
+          role="TUTOR"
+          availableUsers={[selectedStudentForScheduling]}
+          preSelectedUserId={selectedStudentForScheduling.id}
+        />
+      )}
+    </div>
   );
 } 

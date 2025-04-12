@@ -9,6 +9,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
+  DialogClose,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -22,111 +23,135 @@ import {
 } from "@/components/ui/select";
 import { Upload } from "lucide-react";
 
+// Mock subjects (replace with actual data if available)
+const subjects = ["Mathematics", "Physics", "Chemistry", "Biology", "History", "Literature"];
+
 interface UploadExerciseModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onSubmit: (title: string, description: string, subject: string, price: number, file?: File) => void;
 }
 
-export function UploadExerciseModal({ isOpen, onClose }: UploadExerciseModalProps) {
+export function UploadExerciseModal({ isOpen, onClose, onSubmit }: UploadExerciseModalProps) {
   const [title, setTitle] = useState("");
-  const [subject, setSubject] = useState("");
   const [description, setDescription] = useState("");
-  const [dueDate, setDueDate] = useState("");
-  const [file, setFile] = useState<File | null>(null);
+  const [subject, setSubject] = useState("");
+  const [price, setPrice] = useState<number>(0);
+  const [file, setFile] = useState<File | undefined>(undefined);
+  const [error, setError] = useState<string>("");
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    // TODO: Implement file upload logic
-    console.log({ title, subject, description, dueDate, file });
-    onClose();
-  };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setFile(e.target.files[0]);
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files[0]) {
+      setFile(event.target.files[0]);
     }
   };
 
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    if (!title || !description || !subject || price <= 0) {
+      setError("Please fill in all required fields and set a price greater than 0.");
+      return;
+    }
+    onSubmit(title, description, subject, price, file);
+    handleClose();
+  };
+
+  const handleClose = () => {
+    setTitle("");
+    setDescription("");
+    setSubject("");
+    setPrice(0);
+    setFile(undefined);
+    setError("");
+    onClose();
+  };
+
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[425px]">
+    <Dialog open={isOpen} onOpenChange={handleClose}>
+      <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle>Upload Exercise</DialogTitle>
+          <DialogTitle>Upload New Exercise</DialogTitle>
           <DialogDescription>
-            Create a new exercise for your students. Add details and upload the exercise file.
+            Fill in the details for your exercise and upload any relevant files.
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
           <div className="grid gap-4 py-4">
-            <div className="grid gap-2">
-              <Label htmlFor="title">Title</Label>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="title" className="text-right">
+                Title
+              </Label>
               <Input
                 id="title"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                placeholder="Exercise title"
+                className="col-span-3"
                 required
               />
             </div>
-            <div className="grid gap-2">
-              <Label htmlFor="subject">Subject</Label>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="subject" className="text-right">
+                Subject
+              </Label>
               <Select value={subject} onValueChange={setSubject} required>
-                <SelectTrigger>
+                <SelectTrigger className="col-span-3">
                   <SelectValue placeholder="Select a subject" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="mathematics">Mathematics</SelectItem>
-                  <SelectItem value="physics">Physics</SelectItem>
-                  <SelectItem value="chemistry">Chemistry</SelectItem>
-                  <SelectItem value="biology">Biology</SelectItem>
+                  {subjects.map((s) => (
+                    <SelectItem key={s} value={s}>{s}</SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
-            <div className="grid gap-2">
-              <Label htmlFor="description">Description</Label>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="description" className="text-right">
+                Description
+              </Label>
               <Textarea
                 id="description"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                placeholder="Brief description of the exercise"
+                placeholder="Describe the exercise or problem..."
+                className="col-span-3"
+                rows={4}
                 required
               />
             </div>
-            <div className="grid gap-2">
-              <Label htmlFor="dueDate">Due Date</Label>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="price" className="text-right">
+                Price (€)
+              </Label>
               <Input
-                id="dueDate"
-                type="datetime-local"
-                value={dueDate}
-                onChange={(e) => setDueDate(e.target.value)}
+                id="price"
+                type="number"
+                value={price}
+                onChange={(e) => setPrice(parseFloat(e.target.value) || 0)}
+                className="col-span-3"
+                min="0.01"
+                step="0.01"
                 required
               />
             </div>
-            <div className="grid gap-2">
-              <Label htmlFor="file">Exercise File</Label>
-              <div className="flex items-center gap-4">
-                <Input
-                  id="file"
-                  type="file"
-                  onChange={handleFileChange}
-                  accept=".pdf,.doc,.docx"
-                  required
-                  className="flex-1"
-                />
-                <Button type="button" variant="outline" size="icon">
-                  <Upload className="h-4 w-4" />
-                </Button>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="file-upload" className="text-right">
+                File (Optional)
+              </Label>
+              <div className="col-span-3">
+                <Input id="file-upload" type="file" onChange={handleFileChange} className="text-sm" />
+                {file && <p className="text-xs text-muted-foreground mt-1">Selected: {file.name}</p>}
               </div>
-              <p className="text-sm text-muted-foreground">
-                Accepted formats: PDF, DOC, DOCX
-              </p>
             </div>
+            {error && <p className="text-sm text-destructive col-span-4 text-center">{error}</p>}
           </div>
           <DialogFooter>
-            <Button type="button" variant="outline" onClick={onClose}>
-              Cancel
+            <DialogClose asChild>
+              <Button type="button" variant="outline">Cancel</Button>
+            </DialogClose>
+            <Button type="submit">
+              <Upload className="mr-2 h-4 w-4" /> Upload Exercise
             </Button>
-            <Button type="submit">Upload Exercise</Button>
           </DialogFooter>
         </form>
       </DialogContent>

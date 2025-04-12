@@ -1,169 +1,202 @@
 "use client";
 
-import { DashboardWrapper } from "@/components/layout/dashboard-wrapper";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Calendar, List, Plus } from "lucide-react";
 import { useState } from "react";
-import { Calendar as BigCalendar, dateFnsLocalizer, Event } from "react-big-calendar";
-import { format, parse, startOfWeek, getDay } from "date-fns";
-import "react-big-calendar/lib/css/react-big-calendar.css";
-import { ScheduleSessionModal } from "@/components/scheduling/schedule-session-modal";
+// NOTE: DashboardWrapper should be handled by the layout file
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Clock, User, Circle, MessageSquare, Star, CheckCircle, Globe, Building } from "lucide-react";
+import { format } from 'date-fns';
+import Link from "next/link";
+import { LeaveReviewModal } from "@/components/modals/leave-review-modal";
+import { SessionDetailModal } from "@/components/modals/session-detail-modal";
 
+// Interface from previous correct version
 interface Session {
   id: string;
   title: string;
   start: Date;
   end: Date;
   tutor: {
+    id: string;
     name: string;
     avatar: string;
   };
-  type: string;
+  type: "presential" | "online";
   status: "scheduled" | "completed" | "cancelled";
+  reviewLeft: boolean;
+  rating?: number;
+  canReview: boolean;
 }
 
-// Mock data - replace with actual data
+// Mock data from previous correct version
 const mockSessions: Session[] = [
   {
     id: "1",
     title: "Calculus Tutoring",
     start: new Date(2024, 2, 20, 14, 0),
     end: new Date(2024, 2, 20, 15, 0),
-    tutor: {
-      name: "Dr. Smith",
-      avatar: "/avatars/dr-smith.png",
-    },
-    type: "one-on-one",
+    tutor: { id: "t1", name: "Dr. Smith", avatar: "/avatars/dr-smith.png" },
+    type: "online",
     status: "scheduled",
+    reviewLeft: false,
+    canReview: true,
   },
   {
     id: "2",
     title: "Physics Review",
     start: new Date(2024, 2, 22, 10, 0),
     end: new Date(2024, 2, 22, 11, 30),
-    tutor: {
-      name: "Prof. Johnson",
-      avatar: "/avatars/prof-johnson.png",
-    },
-    type: "group",
+    tutor: { id: "t2", name: "Prof. Johnson", avatar: "/avatars/prof-johnson.png" },
+    type: "presential",
     status: "completed",
+    reviewLeft: true,
+    rating: 5,
+    canReview: false,
+  },
+  {
+    id: "3",
+    title: "Chemistry Help",
+    start: new Date(2024, 2, 18, 16, 0),
+    end: new Date(2024, 2, 18, 17, 0),
+    tutor: { id: "t1", name: "Dr. Smith", avatar: "/avatars/dr-smith.png" },
+    type: "online",
+    status: "completed",
+    reviewLeft: false,
+    canReview: true,
   },
 ];
 
-const locales = {
-  "en-US": require("date-fns/locale/en-US"),
-};
-
-const localizer = dateFnsLocalizer({
-  format,
-  parse,
-  startOfWeek,
-  getDay,
-  locales,
-});
-
 export default function StudentSessionsPage() {
-  const [view, setView] = useState<"list" | "calendar">("list");
-  const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+  const [sessionToReview, setSessionToReview] = useState<Session | null>(null);
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+  const [selectedSession, setSelectedSession] = useState<Session | null>(null);
 
-  // Mock available tutors - replace with actual data
-  const availableTutors = [
-    { id: "1", name: "Dr. Smith", avatar: "/avatars/dr-smith.png" },
-    { id: "2", name: "Prof. Johnson", avatar: "/avatars/prof-johnson.png" },
-  ];
+  const handleLeaveReviewClick = (session: Session) => {
+    console.log("handleLeaveReviewClick triggered for session:", session.id);
+    setSessionToReview(session);
+    setIsReviewModalOpen(true);
+    console.log("State after setting: sessionToReview=", session, "isReviewModalOpen=", true);
+  };
+  
+  const handleViewDetailsClick = (session: Session) => {
+    setSelectedSession(session);
+    setIsDetailModalOpen(true);
+  };
 
-  const handleSelectEvent = (event: Session) => {
-    // Handle event click
-    console.log("Selected event:", event);
+  const handleReviewSubmit = (sessionId: string, rating: number, comment: string) => {
+    console.log("Review submitted for session", sessionId, { rating, comment });
+    // TODO: API call
+    setIsReviewModalOpen(false);
+    setSessionToReview(null);
+    // TODO: Refetch or update local state
   };
 
   return (
-    <DashboardWrapper>
-      <div className="container mx-auto py-8">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold">Sessions</h1>
-          <div className="flex gap-2">
-            <Button variant="outline" size="sm" onClick={() => setView(view === "list" ? "calendar" : "list")}>
-              {view === "list" ? <Calendar className="h-4 w-4 mr-2" /> : <List className="h-4 w-4 mr-2" />}
-              {view === "list" ? "Calendar View" : "List View"}
-            </Button>
-            <Button onClick={() => setIsScheduleModalOpen(true)}>
-              <Plus className="h-4 w-4 mr-2" />
-              Schedule Session
-            </Button>
-          </div>
+    // Explicitly NO DashboardWrapper here
+    <div className="container mx-auto py-8">
+      {/* Header */}
+      <div className="flex justify-between items-center mb-8">
+        <div>
+          <h1 className="text-2xl font-bold">My Sessions</h1>
+          <p className="text-muted-foreground">View your upcoming and past tutoring sessions.</p>
         </div>
+      </div>
 
-        {view === "list" ? (
-          <div className="space-y-4">
-            <Card>
-              <CardContent className="p-0">
-                <div className="divide-y">
-                  {mockSessions.map((session) => (
-                    <div key={session.id} className="p-4 hover:bg-muted/50 transition-colors">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-4">
-                          <div className="flex flex-col">
-                            <h3 className="font-semibold">{session.title}</h3>
-                            <p className="text-sm text-muted-foreground">
-                              {session.start && session.end && (
-                                <>
-                                  {format(session.start, "MMMM d, yyyy")} • {format(session.start, "h:mm a")} - {format(session.end, "h:mm a")}
-                                </>
-                              )}
-                            </p>
-                          </div>
-                        </div>
-                        <div className="flex items-center space-x-4">
-                          <div className="flex items-center space-x-2">
-                            <span className="text-sm text-muted-foreground">{session.tutor.name}</span>
-                            <span className="text-sm text-muted-foreground">•</span>
-                            <span className="text-sm text-muted-foreground capitalize">{session.type}</span>
-                          </div>
-                          <Button variant="outline" size="sm">
-                            View Details
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
+      {/* Card Grid Layout */}
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {mockSessions.map((session) => (
+          <Card 
+            key={session.id} 
+            className="flex flex-col transition-all duration-200 ease-in-out hover:shadow-lg hover:-translate-y-1"
+          >
+            <CardHeader>
+              <div className="flex justify-between items-start">
+                <div>
+                  <CardTitle className="text-lg mb-1">{session.title}</CardTitle>
+                  <CardDescription className="text-xs flex items-center gap-1.5">
+                    <User className="h-3 w-3"/> {session.tutor.name}
+                  </CardDescription>
                 </div>
-              </CardContent>
-            </Card>
-          </div>
-        ) : (
-          <Card>
-            <CardContent className="p-4">
-              <div className="h-[600px]">
-                <BigCalendar
-                  localizer={localizer}
-                  events={mockSessions}
-                  startAccessor="start"
-                  endAccessor="end"
-                  onSelectEvent={handleSelectEvent}
-                  views={["month", "week", "day"]}
-                  defaultView="week"
-                  style={{ height: "100%" }}
-                  eventPropGetter={(event: Session) => ({
-                    style: {
-                      backgroundColor: event.status === "completed" ? "#e5e7eb" : "#3b82f6",
-                      border: "none",
-                    },
-                  })}
-                />
+                <Badge variant={session.status === 'completed' ? 'secondary' : 'default'} className="capitalize">
+                  {session.status}
+                </Badge>
+              </div>
+            </CardHeader>
+            <CardContent className="flex-1 space-y-2">
+              <div className="text-sm flex items-center gap-1.5 text-muted-foreground">
+                <Clock className="h-4 w-4"/>
+                <span>{format(session.start, 'PP')} ({format(session.start, 'p')} - {format(session.end, 'p')})</span>
+              </div>
+              <div className="text-sm flex items-center gap-1.5 text-muted-foreground capitalize">
+                 {session.type === 'online' ? <Globe className="h-4 w-4" /> : <Building className="h-4 w-4" />}
+                 <span>{session.type}</span>
               </div>
             </CardContent>
+            <CardFooter className="grid grid-cols-2 gap-2 pt-4">
+              {session.status === 'completed' && session.canReview && (
+                 <Button 
+                    variant="outline"
+                    size="sm" 
+                    className="w-full transition-all duration-150 ease-in-out hover:bg-muted/50 hover:scale-[1.03]"
+                    onClick={() => handleLeaveReviewClick(session)}
+                 >
+                    <Star className="mr-2 h-4 w-4" /> Leave Review
+                 </Button>
+              )}
+              {session.status === 'completed' && !session.canReview && (
+                 <Button variant="outline" size="sm" disabled className="w-full">
+                    <CheckCircle className="mr-2 h-4 w-4" /> Review Submitted
+                 </Button>
+              )}
+              {session.status !== 'completed' && (
+                 <Button variant="secondary" size="sm" className="w-full" disabled>
+                    Session Upcoming
+                 </Button>
+              )}
+              {/* Update this button */}
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="w-full transition-all duration-150 ease-in-out hover:bg-muted/50 hover:scale-[1.03]" 
+                onClick={() => handleViewDetailsClick(session)}
+              >
+                 <MessageSquare className="mr-2 h-4 w-4" /> View Details
+              </Button>
+            </CardFooter>
           </Card>
-        )}
-
-        <ScheduleSessionModal
-          isOpen={isScheduleModalOpen}
-          onClose={() => setIsScheduleModalOpen(false)}
-          role="STUDENT"
-          availableUsers={availableTutors}
-        />
+        ))}
       </div>
-    </DashboardWrapper>
+
+      {/* Leave Review Modal */}
+      {sessionToReview && (
+        <LeaveReviewModal
+          isOpen={isReviewModalOpen}
+          onClose={() => setIsReviewModalOpen(false)}
+          targetUser={{
+             id: sessionToReview.tutor.id,
+             name: sessionToReview.tutor.name,
+             avatar: sessionToReview.tutor.avatar,
+             role: "TUTOR"
+          }}
+          onSubmit={(rating, reviewText) => {
+            if (sessionToReview) {
+              handleReviewSubmit(sessionToReview.id, rating, reviewText);
+            }
+          }}
+        />
+      )}
+
+      {/* Session Detail Modal */}
+      {selectedSession && (
+        <SessionDetailModal
+          isOpen={isDetailModalOpen}
+          onClose={() => setIsDetailModalOpen(false)}
+          session={selectedSession}
+        />
+      )}
+    </div>
   );
 } 
+
