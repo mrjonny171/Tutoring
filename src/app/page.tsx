@@ -1,10 +1,12 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowRight, Book, GraduationCap, MessageSquare, Users, Sparkles, Rocket, Target, Github, Twitter, Linkedin } from "lucide-react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { ArrowRight, Book, GraduationCap, MessageSquare, Users, Sparkles, Rocket, Target, Github, Twitter, Linkedin, Check } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
+import { Badge } from "@/components/ui/badge";
 
 export default function Home() {
   return (
@@ -192,6 +194,180 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* --- Pricing Section --- */}
+      <section id="pricing" className="w-full py-24 bg-background">
+        <div className="container px-4 md:px-6 mx-auto">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+            className="flex flex-col items-center justify-center space-y-4 text-center mb-12 max-w-4xl mx-auto"
+          >
+            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl">Flexible Pricing Plans</h2>
+            <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed">
+              Choose the plan that best fits your needs. Simple, transparent pricing.
+            </p>
+          </motion.div>
+
+          <div className="grid gap-8 md:grid-cols-3 max-w-6xl mx-auto">
+            {/* Student Basic Plan */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              viewport={{ once: true }}
+            >
+              <Card className="h-full flex flex-col hover:shadow-lg transition-shadow duration-300 border-primary/20">
+                <CardHeader className="pb-4">
+                  <CardTitle className="text-xl">Student Basic</CardTitle>
+                  <CardDescription>Access core features and connect with tutors.</CardDescription>
+                  <div className="text-4xl font-bold pt-4">Free</div>
+                </CardHeader>
+                <CardContent className="flex-1 space-y-3">
+                  <ul className="space-y-2 text-sm text-muted-foreground">
+                    <li className="flex items-center gap-2"><Check className="h-4 w-4 text-primary" /> Browse Tutor Profiles</li>
+                    <li className="flex items-center gap-2"><Check className="h-4 w-4 text-primary" /> Schedule Sessions</li>
+                    <li className="flex items-center gap-2"><Check className="h-4 w-4 text-primary" /> Submit Exercise Requests (Limited)</li>
+                    <li className="flex items-center gap-2"><Check className="h-4 w-4 text-primary" /> Basic Dashboard</li>
+                  </ul>
+                </CardContent>
+                <CardFooter className="pt-4">
+                   <Button asChild className="w-full bg-primary hover:bg-primary/90 cursor-pointer">
+                     <Link href="/register">Get Started</Link>
+                   </Button>
+                 </CardFooter>
+              </Card>
+            </motion.div>
+
+            {/* Student Pro Plan */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              viewport={{ once: true }}
+            >
+              <Card className="h-full flex flex-col hover:shadow-lg transition-shadow duration-300 border-2 border-primary ring-4 ring-primary/10">
+                <CardHeader className="pb-4">
+                  <div className="flex justify-between items-center">
+                     <CardTitle className="text-xl">Student Pro</CardTitle>
+                     <Badge variant="default">Popular</Badge>
+                  </div>
+                  <CardDescription>Unlock advanced features and priority support.</CardDescription>
+                  <div className="text-4xl font-bold pt-4">€9<span className="text-lg text-muted-foreground">/month</span></div>
+                </CardHeader>
+                <CardContent className="flex-1 space-y-3">
+                  <ul className="space-y-2 text-sm text-muted-foreground">
+                    <li className="flex items-center gap-2"><Check className="h-4 w-4 text-primary" /> Everything in Basic</li>
+                    <li className="flex items-center gap-2"><Check className="h-4 w-4 text-primary" /> Unlimited Exercise Requests</li>
+                    <li className="flex items-center gap-2"><Check className="h-4 w-4 text-primary" /> Advanced Dashboard Analytics</li>
+                    <li className="flex items-center gap-2"><Check className="h-4 w-4 text-primary" /> Access to Premium Materials</li>
+                    <li className="flex items-center gap-2"><Check className="h-4 w-4 text-primary" /> Priority Support</li>
+                  </ul>
+                </CardContent>
+                <CardFooter className="pt-4">
+                   <Button asChild className="w-full bg-primary hover:bg-primary/90 cursor-pointer">
+                     <Link href="/register?plan=pro">Choose Pro</Link>
+                   </Button>
+                 </CardFooter>
+              </Card>
+            </motion.div>
+
+            {/* Tutor Plan */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              viewport={{ once: true }}
+            >
+              <Card className="h-full flex flex-col hover:shadow-lg transition-shadow duration-300 border-primary/20">
+                <CardHeader className="pb-4">
+                  <CardTitle className="text-xl">Tutor Account</CardTitle>
+                  <CardDescription>Offer your expertise and manage students.</CardDescription>
+                  <div className="text-4xl font-bold pt-4">Free<span className="text-lg text-muted-foreground">*</span></div>
+                   <p className="text-xs text-muted-foreground pt-1">*Platform fees apply per solved exercise/session.</p>
+                </CardHeader>
+                <CardContent className="flex-1 space-y-3">
+                  <ul className="space-y-2 text-sm text-muted-foreground">
+                    <li className="flex items-center gap-2"><Check className="h-4 w-4 text-primary" /> Create Public Profile</li>
+                    <li className="flex items-center gap-2"><Check className="h-4 w-4 text-primary" /> Accept Exercise Requests</li>
+                    <li className="flex items-center gap-2"><Check className="h-4 w-4 text-primary" /> Manage Student Sessions</li>
+                    <li className="flex items-center gap-2"><Check className="h-4 w-4 text-primary" /> Upload Solutions & Materials</li>
+                    <li className="flex items-center gap-2"><Check className="h-4 w-4 text-primary" /> Tutor Dashboard & Payouts</li>
+                  </ul>
+                </CardContent>
+                <CardFooter className="pt-4">
+                   <Button asChild className="w-full bg-primary hover:bg-primary/90 cursor-pointer">
+                     <Link href="/register?role=tutor">Become a Tutor</Link>
+                   </Button>
+                 </CardFooter>
+              </Card>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+      {/* --- End Pricing Section --- */}
+
+      {/* --- FAQ Section --- */}
+      <section id="faq" className="w-full py-24 bg-muted">
+        <div className="container px-4 md:px-6 mx-auto">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+            className="flex flex-col items-center justify-center space-y-4 text-center mb-12 max-w-4xl mx-auto"
+          >
+            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl">Frequently Asked Questions</h2>
+            <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed">
+              Have questions? We've got answers. Find information about our platform and services.
+            </p>
+          </motion.div>
+
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            viewport={{ once: true }}
+            className="max-w-3xl mx-auto"
+          >
+            <Accordion type="single" collapsible className="w-full">
+              <AccordionItem value="item-1">
+                <AccordionTrigger>How do I find a tutor?</AccordionTrigger>
+                <AccordionContent>
+                  Students can browse tutor profiles based on subject, availability, and ratings. You can view detailed profiles before scheduling a session or requesting exercise help.
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="item-2">
+                <AccordionTrigger>What are Exercise Requests?</AccordionTrigger>
+                <AccordionContent>
+                  Students can submit specific problems or assignments as an "Exercise Request" with a proposed price. Available tutors can accept the request, provide a solution by the deadline, and receive payment through the platform upon successful completion.
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="item-3">
+                <AccordionTrigger>How does scheduling work?</AccordionTrigger>
+                <AccordionContent>
+                  Both students and tutors can propose session times through the integrated scheduling tool. Once a time is agreed upon, it appears on both users' dashboards. Sessions can be marked as online or in-person.
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="item-4">
+                <AccordionTrigger>How do tutors get paid?</AccordionTrigger>
+                <AccordionContent>
+                  Tutors set their own prices for sessions or exercise solutions. Payments are processed securely through the platform after a session is completed or an exercise solution is delivered. A small platform fee is deducted from the tutor's earnings.
+                </AccordionContent>
+              </AccordionItem>
+               <AccordionItem value="item-5">
+                <AccordionTrigger>What if I'm not satisfied with a session or solution?</AccordionTrigger>
+                <AccordionContent>
+                  We encourage open communication between students and tutors. If issues arise, please contact our support team through the dashboard. We offer mediation and a resolution process to ensure satisfaction.
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+          </motion.div>
+        </div>
+      </section>
+      {/* --- End FAQ Section --- */}
 
       {/* CTA Section */}
       <section className="w-full py-24">
