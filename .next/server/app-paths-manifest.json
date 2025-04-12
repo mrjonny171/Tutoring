@@ -15,6 +15,7 @@
   "/dashboard/tutor/page": "app/dashboard/tutor/page.js",
   "/dashboard/tutor/sessions/page": "app/dashboard/tutor/sessions/page.js",
   "/dashboard/tutor/students/page": "app/dashboard/tutor/students/page.js",
+  "/dashboard/tutors/page": "app/dashboard/tutors/page.js",
   "/favicon.ico/route": "app/favicon.ico/route.js",
   "/login/page": "app/login/page.js",
   "/page": "app/page.js",
