@@ -7,6 +7,7 @@
   "/dashboard/student/page": "app/dashboard/student/page.js",
   "/dashboard/student/sessions/page": "app/dashboard/student/sessions/page.js",
   "/dashboard/student/tutors/page": "app/dashboard/student/tutors/page.js",
+  "/favicon.ico/route": "app/favicon.ico/route.js",
   "/login/page": "app/login/page.js",
   "/page": "app/page.js"
 }

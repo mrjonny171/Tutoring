@@ -67,7 +67,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
               .maybeSingle(); // Use maybeSingle() instead of single()
 
             if (profileError) {
-              console.error("ERRORRRR");
               setProfile(null);
 
               if (profileError.code !== 'PGRST116') {
@@ -145,13 +144,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [supabase]); // Dependency array includes supabase client
 
   const signOut = async () => {
-    setLoading(true);
+    // setLoading(true); // Remove this - let listener handle state
     const { error } = await supabase.auth.signOut();
     if (error) {
+      // Log the error but don't change loading state here
       console.error("Error signing out:", error);
+      // Optionally throw the error if the caller needs to handle it
+      // throw error; 
     }
-    // State updates will be handled by onAuthStateChange listener
-    // setLoading(false); // Listener will reset loading potentially
+    // State updates (user=null, profile=null) are handled by onAuthStateChange listener
+    // setLoading(false); // Remove this
   };
 
   const value = {
