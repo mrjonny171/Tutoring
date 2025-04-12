@@ -7,6 +7,7 @@ import {
   DialogTitle,
   DialogDescription,
   DialogFooter,
+  DialogClose,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -82,9 +83,12 @@ export function SessionDetailModal({ isOpen, onClose, session }: SessionDetailMo
           */} 
         </div>
 
-        <DialogFooter>
-          <Button variant="outline" onClick={onClose}>Close</Button>
-          {/* Maybe add a 'Join Session' or 'Cancel Session' button conditionally */} 
+        <DialogFooter className="sm:justify-end">
+          <DialogClose asChild>
+            <Button type="button" variant="secondary" className="cursor-pointer">
+              Close
+            </Button>
+          </DialogClose>
         </DialogFooter>
       </DialogContent>
     </Dialog>

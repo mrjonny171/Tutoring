@@ -6,6 +6,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogFooter,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -61,15 +62,15 @@ export function UploadSolutionModal({
               required
             />
           </div>
-          <div className="flex justify-end gap-2">
-            <Button type="button" variant="outline" onClick={onClose}>
+          <DialogFooter>
+            <Button variant="outline" onClick={onClose} className="cursor-pointer">
               Cancel
             </Button>
-            <Button type="submit">
+            <Button onClick={handleSubmit} className="cursor-pointer">
               <Upload className="mr-2 h-4 w-4" />
               {exercise.hasSolution ? "Update Solution" : "Upload Solution"}
             </Button>
-          </div>
+          </DialogFooter>
         </form>
       </DialogContent>
     </Dialog>

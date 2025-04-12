@@ -1260,7 +1260,7 @@ function ScheduleSessionModal({ isOpen, onClose, role, availableUsers, preSelect
                                     type: "button",
                                     variant: "outline",
                                     onClick: onClose,
-                                    className: "flex items-center gap-2",
+                                    className: "cursor-pointer",
                                     children: [
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$x$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__X$3e$__["X"], {
                                             className: "h-4 w-4"
@@ -1514,6 +1514,7 @@ function TutorStudentsPage() {
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DialogTrigger"], {
                                         asChild: true,
                                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
+                                            className: "cursor-pointer",
                                             children: "Invite Student"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/dashboard/tutor/students/page.tsx",
@@ -1590,6 +1591,7 @@ function TutorStudentsPage() {
                                                                 type: "button",
                                                                 variant: "outline",
                                                                 onClick: ()=>setIsInviteModalOpen(false),
+                                                                className: "cursor-pointer",
                                                                 children: "Cancel"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/dashboard/tutor/students/page.tsx",
@@ -1598,10 +1600,11 @@ function TutorStudentsPage() {
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
                                                                 type: "submit",
+                                                                className: "cursor-pointer",
                                                                 children: "Send Invitation"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/dashboard/tutor/students/page.tsx",
-                                                                lineNumber: 166,
+                                                                lineNumber: 167,
                                                                 columnNumber: 19
                                                             }, this)
                                                         ]
@@ -1661,7 +1664,7 @@ function TutorStudentsPage() {
                                                                 src: student.avatar
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/dashboard/tutor/students/page.tsx",
-                                                                lineNumber: 185,
+                                                                lineNumber: 186,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$avatar$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["AvatarFallback"], {
@@ -1669,13 +1672,13 @@ function TutorStudentsPage() {
                                                                 children: student.name.split(" ").map((n)=>n[0]).join("")
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/dashboard/tutor/students/page.tsx",
-                                                                lineNumber: 186,
+                                                                lineNumber: 187,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/app/dashboard/tutor/students/page.tsx",
-                                                        lineNumber: 184,
+                                                        lineNumber: 185,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1685,7 +1688,7 @@ function TutorStudentsPage() {
                                                                 children: student.name
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/dashboard/tutor/students/page.tsx",
-                                                                lineNumber: 191,
+                                                                lineNumber: 192,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1693,19 +1696,19 @@ function TutorStudentsPage() {
                                                                 children: student.email
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/dashboard/tutor/students/page.tsx",
-                                                                lineNumber: 192,
+                                                                lineNumber: 193,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/app/dashboard/tutor/students/page.tsx",
-                                                        lineNumber: 190,
+                                                        lineNumber: 191,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/dashboard/tutor/students/page.tsx",
-                                                lineNumber: 183,
+                                                lineNumber: 184,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1718,7 +1721,7 @@ function TutorStudentsPage() {
                                                                 className: "h-4 w-4 text-primary"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/dashboard/tutor/students/page.tsx",
-                                                                lineNumber: 197,
+                                                                lineNumber: 198,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1729,13 +1732,13 @@ function TutorStudentsPage() {
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/app/dashboard/tutor/students/page.tsx",
-                                                                lineNumber: 198,
+                                                                lineNumber: 199,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/app/dashboard/tutor/students/page.tsx",
-                                                        lineNumber: 196,
+                                                        lineNumber: 197,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1745,7 +1748,7 @@ function TutorStudentsPage() {
                                                                 className: "h-4 w-4 text-primary"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/dashboard/tutor/students/page.tsx",
-                                                                lineNumber: 201,
+                                                                lineNumber: 202,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1753,13 +1756,13 @@ function TutorStudentsPage() {
                                                                 children: student.averageRating
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/dashboard/tutor/students/page.tsx",
-                                                                lineNumber: 202,
+                                                                lineNumber: 203,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/app/dashboard/tutor/students/page.tsx",
-                                                        lineNumber: 200,
+                                                        lineNumber: 201,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1769,7 +1772,7 @@ function TutorStudentsPage() {
                                                                 className: "h-4 w-4 text-primary"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/dashboard/tutor/students/page.tsx",
-                                                                lineNumber: 205,
+                                                                lineNumber: 206,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1780,38 +1783,38 @@ function TutorStudentsPage() {
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/app/dashboard/tutor/students/page.tsx",
-                                                                lineNumber: 206,
+                                                                lineNumber: 207,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/app/dashboard/tutor/students/page.tsx",
-                                                        lineNumber: 204,
+                                                        lineNumber: 205,
                                                         columnNumber: 21
                                                     }, this),
                                                     expandedStudents.has(student.id) ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$chevron$2d$up$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ChevronUp$3e$__["ChevronUp"], {
                                                         className: "h-4 w-4 text-muted-foreground"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/dashboard/tutor/students/page.tsx",
-                                                        lineNumber: 209,
+                                                        lineNumber: 210,
                                                         columnNumber: 23
                                                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$chevron$2d$down$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ChevronDown$3e$__["ChevronDown"], {
                                                         className: "h-4 w-4 text-muted-foreground"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/dashboard/tutor/students/page.tsx",
-                                                        lineNumber: 211,
+                                                        lineNumber: 212,
                                                         columnNumber: 23
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/dashboard/tutor/students/page.tsx",
-                                                lineNumber: 195,
+                                                lineNumber: 196,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/dashboard/tutor/students/page.tsx",
-                                        lineNumber: 179,
+                                        lineNumber: 180,
                                         columnNumber: 17
                                     }, this),
                                     expandedStudents.has(student.id) && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1827,7 +1830,7 @@ function TutorStudentsPage() {
                                                             children: "Subjects"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/dashboard/tutor/students/page.tsx",
-                                                            lineNumber: 220,
+                                                            lineNumber: 221,
                                                             columnNumber: 25
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1838,18 +1841,18 @@ function TutorStudentsPage() {
                                                                     children: subject
                                                                 }, subject, false, {
                                                                     fileName: "[project]/src/app/dashboard/tutor/students/page.tsx",
-                                                                    lineNumber: 223,
+                                                                    lineNumber: 224,
                                                                     columnNumber: 29
                                                                 }, this))
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/dashboard/tutor/students/page.tsx",
-                                                            lineNumber: 221,
+                                                            lineNumber: 222,
                                                             columnNumber: 25
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/app/dashboard/tutor/students/page.tsx",
-                                                    lineNumber: 219,
+                                                    lineNumber: 220,
                                                     columnNumber: 23
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1857,58 +1860,58 @@ function TutorStudentsPage() {
                                                     children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
                                                         variant: "outline",
                                                         size: "sm",
-                                                        className: "bg-background",
+                                                        className: "bg-background cursor-pointer",
                                                         onClick: ()=>handleScheduleClick(student),
                                                         children: [
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$calendar$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Calendar$3e$__["Calendar"], {
                                                                 className: "h-4 w-4 mr-2"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/dashboard/tutor/students/page.tsx",
-                                                                lineNumber: 236,
+                                                                lineNumber: 237,
                                                                 columnNumber: 27
                                                             }, this),
                                                             "Schedule Session"
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/app/dashboard/tutor/students/page.tsx",
-                                                        lineNumber: 230,
+                                                        lineNumber: 231,
                                                         columnNumber: 25
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/dashboard/tutor/students/page.tsx",
-                                                    lineNumber: 229,
+                                                    lineNumber: 230,
                                                     columnNumber: 23
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/dashboard/tutor/students/page.tsx",
-                                            lineNumber: 218,
+                                            lineNumber: 219,
                                             columnNumber: 21
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/dashboard/tutor/students/page.tsx",
-                                        lineNumber: 217,
+                                        lineNumber: 218,
                                         columnNumber: 19
                                     }, this)
                                 ]
                             }, student.id, true, {
                                 fileName: "[project]/src/app/dashboard/tutor/students/page.tsx",
-                                lineNumber: 178,
+                                lineNumber: 179,
                                 columnNumber: 15
                             }, this))
                     }, void 0, false, {
                         fileName: "[project]/src/app/dashboard/tutor/students/page.tsx",
-                        lineNumber: 176,
+                        lineNumber: 177,
                         columnNumber: 11
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/src/app/dashboard/tutor/students/page.tsx",
-                    lineNumber: 175,
+                    lineNumber: 176,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/app/dashboard/tutor/students/page.tsx",
-                lineNumber: 174,
+                lineNumber: 175,
                 columnNumber: 7
             }, this),
             selectedStudentForScheduling && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$scheduling$2f$schedule$2d$session$2d$modal$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["ScheduleSessionModal"], {
@@ -1924,7 +1927,7 @@ function TutorStudentsPage() {
                 preSelectedUserId: selectedStudentForScheduling.id
             }, void 0, false, {
                 fileName: "[project]/src/app/dashboard/tutor/students/page.tsx",
-                lineNumber: 250,
+                lineNumber: 251,
                 columnNumber: 9
             }, this)
         ]

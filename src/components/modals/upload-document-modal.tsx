@@ -105,7 +105,7 @@ export function UploadDocumentModal({ isOpen, onClose, onSubmit }: UploadDocumen
           </div>
           <DialogFooter>
             <DialogClose asChild><Button type="button" variant="outline">Cancel</Button></DialogClose>
-            <Button type="submit"><Upload className="mr-2 h-4 w-4" /> Upload Document</Button>
+            <Button type="submit"><Upload className="mr-2 h-4 w-4 cursor-pointer" /> Upload Document</Button>
           </DialogFooter>
         </form>
       </DialogContent>

@@ -93,71 +93,83 @@ export default function TutorDashboardPage() {
       <div className="grid gap-6 md:grid-cols-2">
         <Card>
           <CardHeader>
-            <CardTitle className="text-lg font-medium">Weekly Activity</CardTitle>
+            <CardTitle>Weekly Activity (Hours)</CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="h-[240px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={weeklyData}>
-                  <XAxis 
-                    dataKey="day" 
-                    stroke="#888888"
-                    fontSize={12}
-                    tickLine={false}
-                    axisLine={false}
-                  />
-                  <YAxis
-                    stroke="#888888"
-                    fontSize={12}
-                    tickLine={false}
-                    axisLine={false}
-                    tickFormatter={(value) => `${value}`}
-                  />
-                  <Tooltip />
-                  <Area
-                    type="monotone"
-                    dataKey="hours"
-                    stroke="#adfa1d"
-                    fill="rgba(173, 250, 29, 0.2)"
-                    strokeWidth={2}
-                  />
-                </AreaChart>
-              </ResponsiveContainer>
-            </div>
+          <CardContent className="pl-2">
+            <ResponsiveContainer width="100%" height={300}>
+              <AreaChart data={weeklyData} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
+                <defs>
+                  <linearGradient id="colorActivity" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#8B5CF6" stopOpacity={0.8}/> 
+                    <stop offset="95%" stopColor="#8B5CF6" stopOpacity={0}/>
+                  </linearGradient>
+                </defs>
+                <XAxis 
+                  dataKey="day"
+                  stroke="#888888"
+                  fontSize={12}
+                  tickLine={false}
+                  axisLine={false}
+                />
+                <YAxis 
+                  stroke="#888888"
+                  fontSize={12}
+                  tickLine={false}
+                  axisLine={false}
+                  tickFormatter={(value) => `${value}`}
+                />
+                <Tooltip 
+                    contentStyle={{ backgroundColor: 'rgba(255, 255, 255, 0.9)', border: '1px solid #ccc', borderRadius: '4px'}} 
+                    labelStyle={{ fontWeight: 'bold' }} 
+                    itemStyle={{ color: '#333' }}
+                />
+                <Area 
+                  type="monotone" 
+                  dataKey="hours" 
+                  stroke="#8B5CF6"
+                  fillOpacity={1} 
+                  fill="url(#colorActivity)"
+                  strokeWidth={2}
+                  dot={{ r: 4, strokeWidth: 1, fill: '#fff' }} 
+                  activeDot={{ r: 6, strokeWidth: 2, fill: '#8B5CF6' }}
+                />
+              </AreaChart>
+            </ResponsiveContainer>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader>
-            <CardTitle className="text-lg font-medium">Hours by Subject</CardTitle>
+            <CardTitle>Hours by Subject</CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="h-[240px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={subjectData}>
-                  <XAxis
-                    dataKey="subject"
-                    stroke="#888888"
-                    fontSize={12}
-                    tickLine={false}
-                    axisLine={false}
-                  />
-                  <YAxis
-                    stroke="#888888"
-                    fontSize={12}
-                    tickLine={false}
-                    axisLine={false}
-                    tickFormatter={(value) => `${value}h`}
-                  />
-                  <Tooltip />
-                  <Bar
-                    dataKey="hours"
-                    fill="#adfa1d"
-                    radius={[4, 4, 0, 0]}
-                  />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
+          <CardContent className="pl-2">
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={subjectData} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
+                <XAxis
+                  dataKey="subject"
+                  stroke="#888888"
+                  fontSize={12}
+                  tickLine={false}
+                  axisLine={false}
+                />
+                <YAxis
+                  stroke="#888888"
+                  fontSize={12}
+                  tickLine={false}
+                  axisLine={false}
+                />
+                <Tooltip 
+                    contentStyle={{ backgroundColor: 'rgba(255, 255, 255, 0.9)', border: '1px solid #ccc', borderRadius: '4px'}} 
+                    labelStyle={{ fontWeight: 'bold' }} 
+                    itemStyle={{ color: '#333' }}
+                />
+                <Bar 
+                  dataKey="hours" 
+                  fill="#8B5CF6"
+                  radius={[4, 4, 0, 0]}
+                />
+              </BarChart>
+            </ResponsiveContainer>
           </CardContent>
         </Card>
       </div>

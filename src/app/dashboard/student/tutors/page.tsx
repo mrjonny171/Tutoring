@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { ScheduleSessionModal } from "@/components/scheduling/schedule-session-modal";
-import { CalendarPlus, User, Star } from "lucide-react";
+import { CalendarPlus, User, Star, MapPin, GraduationCap, CheckCircle } from "lucide-react";
 import Link from "next/link";
 import { LeaveReviewModal, UserInfo } from "@/components/modals/leave-review-modal";
 
@@ -57,46 +57,46 @@ interface TutorCardProps {
 
 function TutorCard({ tutor, onScheduleClick, onReviewClick }: TutorCardProps) {
   return (
-    <Card
-      key={tutor.id}
-      className="flex flex-col h-full transition-all duration-200 ease-in-out hover:shadow-lg hover:-translate-y-1"
-    >
-      <CardHeader className="flex flex-row items-start gap-4 space-y-0 pb-4 relative">
-        <Avatar className="h-12 w-12 border">
-          <AvatarImage src={tutor.avatar} alt={tutor.name} />
-          <AvatarFallback>{tutor.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
-        </Avatar>
-        <div className="flex-1">
-          <CardTitle>{tutor.name}</CardTitle>
-          {/* Simple rating display */}
-           <div className="flex items-center gap-1 text-sm text-muted-foreground">
-             <Star className="h-4 w-4 text-yellow-400 fill-yellow-400" />
-             <span>{tutor.rating.toFixed(1)}</span>
-           </div>
-        </div>
-      </CardHeader>
-      <CardContent className="flex-1">
-        <div className="space-y-2 mb-4">
-          <h4 className="text-sm font-medium">Subjects</h4>
-          <div className="flex flex-wrap gap-1">
-            {tutor.subjects.map((subject) => (
-              <Badge key={subject} variant="secondary">{subject}</Badge>
-            ))}
+    <Link key={tutor.id} href={`/dashboard/student/tutors/${tutor.id}`} className="block">
+      <Card 
+        className="h-full flex flex-col overflow-hidden transition-shadow duration-200 ease-in-out hover:shadow-xl cursor-pointer"
+      >
+        <CardHeader className="flex flex-row items-start gap-4 space-y-0 pb-4 relative">
+          <Avatar className="h-12 w-12 border">
+            <AvatarImage src={tutor.avatar} alt={tutor.name} />
+            <AvatarFallback>{tutor.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+          </Avatar>
+          <div className="flex-1">
+            <CardTitle>{tutor.name}</CardTitle>
+            <div className="flex items-center gap-1 text-sm text-muted-foreground">
+              <Star className="h-4 w-4 text-yellow-400 fill-yellow-400" />
+              <span>{tutor.rating.toFixed(1)}</span>
+            </div>
           </div>
-        </div>
-        <CardDescription className="text-sm text-muted-foreground line-clamp-3">
-          {tutor.bio}
-        </CardDescription>
-      </CardContent>
-      <CardFooter className="flex flex-col sm:flex-row gap-2 items-stretch sm:items-center pt-4">
-        <Button variant="outline" size="sm" className="flex-1" onClick={() => onReviewClick(tutor)}>
-          <Star className="mr-2 h-4 w-4" /> Leave Review
-        </Button>
-        <Button size="sm" className="flex-1" onClick={(e) => { e.preventDefault(); onScheduleClick(tutor); }}>
-          <CalendarPlus className="mr-2 h-4 w-4" /> Schedule
-        </Button>
-      </CardFooter>
-    </Card>
+        </CardHeader>
+        <CardContent className="flex-1">
+          <div className="space-y-2 mb-4">
+            <h4 className="text-sm font-medium">Subjects</h4>
+            <div className="flex flex-wrap gap-1">
+              {tutor.subjects.map((subject) => (
+                <Badge key={subject} variant="secondary">{subject}</Badge>
+              ))}
+            </div>
+          </div>
+          <CardDescription className="text-sm text-muted-foreground line-clamp-3">
+            {tutor.bio}
+          </CardDescription>
+        </CardContent>
+        <CardFooter className="flex flex-col sm:flex-row gap-2 items-stretch sm:items-center pt-4">
+          <Button variant="outline" size="sm" className="flex-1 cursor-pointer" onClick={(e) => { e.preventDefault(); onReviewClick(tutor); }}>
+            <Star className="mr-2 h-4 w-4" /> Leave Review
+          </Button>
+          <Button size="sm" className="flex-1 cursor-pointer" onClick={(e) => { e.preventDefault(); onScheduleClick(tutor); }}>
+            <CalendarPlus className="mr-2 h-4 w-4" /> Schedule
+          </Button>
+        </CardFooter>
+      </Card>
+    </Link>
   );
 }
 
@@ -140,23 +140,21 @@ export default function StudentTutorsPage() {
   }
 
   return (
-    <>
-      <div className="container mx-auto py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold">My Tutors</h1>
-          <p className="text-muted-foreground">Browse available tutors and schedule a session.</p>
-        </div>
+    <div className="container mx-auto py-8">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold">My Tutors</h1>
+        <p className="text-muted-foreground">Browse available tutors and schedule a session.</p>
+      </div>
 
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {mockTutors.map((tutor) => (
-            <TutorCard
-              key={tutor.id}
-              tutor={tutor}
-              onScheduleClick={handleScheduleClick}
-              onReviewClick={handleOpenReviewModal}
-            />
-          ))}
-        </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {mockTutors.map((tutor) => (
+          <TutorCard
+            key={tutor.id}
+            tutor={tutor}
+            onScheduleClick={handleScheduleClick}
+            onReviewClick={handleOpenReviewModal}
+          />
+        ))}
       </div>
 
       {/* Scheduling Modal */}
@@ -179,6 +177,6 @@ export default function StudentTutorsPage() {
             onSubmit={handleReviewSubmit}
           />
       )}
-    </>
+    </div>
   );
 } 

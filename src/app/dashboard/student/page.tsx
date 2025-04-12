@@ -35,9 +35,9 @@ const subjectScores = [
 
 export default function StudentDashboardPage() {
   return (
-    <div className="p-6 space-y-6 bg-gradient-to-b from-teal-50 to-slate-50 min-h-screen">
+    <div className="p-6 space-y-6">
       <div>
-        <h1 className="text-2xl font-bold bg-gradient-to-r from-teal-600 to-purple-600 text-transparent bg-clip-text">
+        <h1 className="text-2xl font-bold">
           Dashboard
         </h1>
         <p className="text-muted-foreground">
@@ -46,46 +46,46 @@ export default function StudentDashboardPage() {
       </div>
 
       <div className="grid gap-4 md:grid-cols-3">
-        <Card className="bg-gradient-to-br from-teal-50 to-cyan-50 border-none shadow-lg hover:shadow-xl transition-all">
+        <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-teal-700">
+            <CardTitle className="text-sm font-medium">
               Completed Sessions
             </CardTitle>
-            <Clock className="h-4 w-4 text-teal-500" />
+            <Clock className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-teal-900">{mockStats.completedSessions}</div>
-            <p className="text-xs text-teal-600">
+            <div className="text-2xl font-bold">{mockStats.completedSessions}</div>
+            <p className="text-xs text-muted-foreground">
               Sessions attended
             </p>
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-br from-coral-50 to-rose-50 border-none shadow-lg hover:shadow-xl transition-all">
+        <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-coral-700">
+            <CardTitle className="text-sm font-medium">
               Study Hours
             </CardTitle>
-            <BookOpen className="h-4 w-4 text-coral-500" />
+            <BookOpen className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-coral-900">{mockStats.studyHours}</div>
-            <p className="text-xs text-coral-600">
+            <div className="text-2xl font-bold">{mockStats.studyHours}</div>
+            <p className="text-xs text-muted-foreground">
               Total hours
             </p>
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-br from-purple-50 to-violet-50 border-none shadow-lg hover:shadow-xl transition-all">
+        <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-purple-700">
+            <CardTitle className="text-sm font-medium">
               Average Score
             </CardTitle>
-            <GraduationCap className="h-4 w-4 text-purple-500" />
+            <GraduationCap className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-purple-900">{mockStats.averageScore}%</div>
-            <p className="text-xs text-purple-600">
+            <div className="text-2xl font-bold">{mockStats.averageScore}%</div>
+            <p className="text-xs text-muted-foreground">
               Overall performance
             </p>
           </CardContent>
@@ -93,9 +93,9 @@ export default function StudentDashboardPage() {
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">
-        <Card className="border-none shadow-lg hover:shadow-xl transition-all bg-white">
+        <Card>
           <CardHeader>
-            <CardTitle className="text-lg font-medium bg-gradient-to-r from-teal-600 to-cyan-600 text-transparent bg-clip-text">
+            <CardTitle className="text-lg font-medium">
               Weekly Study Hours
             </CardTitle>
           </CardHeader>
@@ -103,40 +103,40 @@ export default function StudentDashboardPage() {
             <div className="h-[240px]">
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={weeklyStudyData}>
+                  <defs>
+                    <linearGradient id="colorStudy" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#8B5CF6" stopOpacity={0.8}/>
+                      <stop offset="95%" stopColor="#8B5CF6" stopOpacity={0}/>
+                    </linearGradient>
+                  </defs>
                   <XAxis 
                     dataKey="day" 
-                    stroke="#888888"
+                    stroke="hsl(var(--muted-foreground))"
                     fontSize={12}
                     tickLine={false}
                     axisLine={false}
                   />
                   <YAxis
-                    stroke="#888888"
+                    stroke="hsl(var(--muted-foreground))"
                     fontSize={12}
                     tickLine={false}
                     axisLine={false}
                     tickFormatter={(value) => `${value}h`}
                   />
                   <Tooltip 
-                    contentStyle={{
-                      backgroundColor: "rgba(255, 255, 255, 0.9)",
-                      border: "none",
-                      borderRadius: "8px",
-                      boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)"
-                    }}
+                    contentStyle={{ backgroundColor: 'rgba(255, 255, 255, 0.9)', border: '1px solid #ccc', borderRadius: '4px'}} 
+                    labelStyle={{ fontWeight: 'bold' }} 
+                    itemStyle={{ color: '#333' }}
                   />
-                  <defs>
-                    <linearGradient id="studyGradient" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#0d9488" stopOpacity={0.3}/>
-                      <stop offset="95%" stopColor="#0891b2" stopOpacity={0}/>
-                    </linearGradient>
-                  </defs>
                   <Area
                     type="monotone"
                     dataKey="hours"
-                    stroke="#0d9488"
-                    fill="url(#studyGradient)"
+                    stroke="#8B5CF6"
+                    fillOpacity={1}
+                    fill="url(#colorStudy)"
                     strokeWidth={2}
+                    dot={{ r: 4, strokeWidth: 1, fill: '#fff' }}
+                    activeDot={{ r: 6, strokeWidth: 2, fill: '#8B5CF6' }}
                   />
                 </AreaChart>
               </ResponsiveContainer>
@@ -144,9 +144,9 @@ export default function StudentDashboardPage() {
           </CardContent>
         </Card>
 
-        <Card className="border-none shadow-lg hover:shadow-xl transition-all bg-white">
+        <Card>
           <CardHeader>
-            <CardTitle className="text-lg font-medium bg-gradient-to-r from-coral-600 to-rose-600 text-transparent bg-clip-text">
+            <CardTitle className="text-lg font-medium">
               Scores by Subject
             </CardTitle>
           </CardHeader>
@@ -156,35 +156,27 @@ export default function StudentDashboardPage() {
                 <BarChart data={subjectScores}>
                   <XAxis
                     dataKey="subject"
-                    stroke="#888888"
+                    stroke="hsl(var(--muted-foreground))"
                     fontSize={12}
                     tickLine={false}
                     axisLine={false}
                   />
                   <YAxis
-                    stroke="#888888"
+                    stroke="hsl(var(--muted-foreground))"
                     fontSize={12}
                     tickLine={false}
                     axisLine={false}
                     tickFormatter={(value) => `${value}%`}
                   />
                   <Tooltip 
-                    contentStyle={{
-                      backgroundColor: "rgba(255, 255, 255, 0.9)",
-                      border: "none",
-                      borderRadius: "8px",
-                      boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)"
-                    }}
+                    contentStyle={{ backgroundColor: 'rgba(255, 255, 255, 0.9)', border: '1px solid #ccc', borderRadius: '4px'}} 
+                    labelStyle={{ fontWeight: 'bold' }} 
+                    itemStyle={{ color: '#333' }}
+                    formatter={(value: number) => `${value}%`}
                   />
-                  <defs>
-                    <linearGradient id="scoreGradient" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#ff7f50" stopOpacity={1}/>
-                      <stop offset="100%" stopColor="#e11d48" stopOpacity={1}/>
-                    </linearGradient>
-                  </defs>
                   <Bar
                     dataKey="score"
-                    fill="url(#scoreGradient)"
+                    fill="#8B5CF6"
                     radius={[4, 4, 0, 0]}
                   />
                 </BarChart>

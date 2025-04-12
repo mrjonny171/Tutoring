@@ -132,7 +132,7 @@ export default function TutorStudentsPage() {
           </div>
           <Dialog open={isInviteModalOpen} onOpenChange={setIsInviteModalOpen}>
             <DialogTrigger asChild>
-              <Button>Invite Student</Button>
+              <Button className="cursor-pointer">Invite Student</Button>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
@@ -160,10 +160,11 @@ export default function TutorStudentsPage() {
                     type="button"
                     variant="outline"
                     onClick={() => setIsInviteModalOpen(false)}
+                    className="cursor-pointer"
                   >
                     Cancel
                   </Button>
-                  <Button type="submit">Send Invitation</Button>
+                  <Button type="submit" className="cursor-pointer">Send Invitation</Button>
                 </div>
               </form>
             </DialogContent>
@@ -230,7 +231,7 @@ export default function TutorStudentsPage() {
                         <Button 
                           variant="outline" 
                           size="sm" 
-                          className="bg-background" 
+                          className="bg-background cursor-pointer" 
                           onClick={() => handleScheduleClick(student)} 
                         >
                           <Calendar className="h-4 w-4 mr-2" />

@@ -5,11 +5,12 @@ import { useState } from "react";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { CalendarPlus, Clock, User, Circle, MessageSquare, Star, Globe, Building } from "lucide-react";
+import { CalendarPlus, Clock, User, Circle, MessageSquare, Star, Globe, Building, Eye } from "lucide-react";
 import { format } from 'date-fns';
 import { ScheduleSessionModal } from "@/components/scheduling/schedule-session-modal";
 import Link from "next/link";
 import { SessionDetailModal } from "@/components/modals/session-detail-modal";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 
 // Interface from previous correct version
 interface Session {
@@ -90,9 +91,13 @@ export default function TutorSessionsPage() {
           <h1 className="text-2xl font-bold">Sessions</h1>
           <p className="text-muted-foreground">View and manage your upcoming and past sessions.</p>
         </div>
-        <Button onClick={() => setIsScheduleModalOpen(true)}>
-          <CalendarPlus className="mr-2 h-4 w-4" /> Schedule Session
-        </Button>
+        <Dialog open={isScheduleModalOpen} onOpenChange={setIsScheduleModalOpen}>
+          <DialogTrigger asChild>
+            <Button className="cursor-pointer">
+              <CalendarPlus className="mr-2 h-4 w-4" /> Schedule Session
+            </Button>
+          </DialogTrigger>
+        </Dialog>
       </div>
 
       {/* Card Grid Layout */}
@@ -125,14 +130,14 @@ export default function TutorSessionsPage() {
                 <span>{session.type}</span>
               </div>
             </CardContent>
-            <CardFooter className="pt-4">
+            <CardFooter className="pt-4 flex justify-center">
               <Button 
                 variant="outline" 
-                size="sm" 
-                className="w-full transition-all duration-150 ease-in-out hover:bg-muted/50 hover:scale-[1.03]" 
+                size="sm"
                 onClick={() => handleViewDetailsClick(session)}
+                className="hover:bg-primary hover:text-primary-foreground cursor-pointer"
               >
-                <MessageSquare className="mr-2 h-4 w-4" /> View Details
+                <Eye className="h-4 w-4 mr-2" /> View Details
               </Button>
             </CardFooter>
           </Card>

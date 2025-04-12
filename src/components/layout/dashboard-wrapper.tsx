@@ -21,18 +21,18 @@ export function DashboardWrapper({ children }: DashboardWrapperProps) {
       <div className="fixed top-4 right-4 z-50">
         <Button
           variant="outline"
-          size="sm"
+          size="icon"
+          className="bg-background/80 backdrop-blur-sm border-primary/20 hover:bg-primary/10 cursor-pointer"
           onClick={toggleRole}
-          className="flex items-center gap-2"
         >
           {userRole === "TUTOR" ? (
             <>
-              <User className="h-4 w-4" />
+              <User className="h-5 w-5" />
               Switch to Student View
             </>
           ) : (
             <>
-              <GraduationCap className="h-4 w-4" />
+              <GraduationCap className="h-5 w-5" />
               Switch to Tutor View
             </>
           )}

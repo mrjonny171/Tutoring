@@ -135,7 +135,7 @@ export default function DashboardPage() {
               </Button>
               <Button asChild variant="outline">
                 <Link href="/dashboard/tutor/documents/upload">
-                  <FileText className="mr-2 h-4 w-4" />
+                  <FileText className="mr-2 h-4 w-4 cursor-pointer" />
                   Upload Documents
                 </Link>
               </Button>

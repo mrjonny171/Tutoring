@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Download, FileText, Plus, Tag, Clock, Filter, UserCheck, FileCheck } from "lucide-react";
 import { CreateExerciseModal } from "@/components/modals/create-exercise-modal";
 import { Badge } from "@/components/ui/badge";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 
 interface Exercise {
   id: string;
@@ -115,79 +115,95 @@ export default function StudentExercisesPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center flex-wrap gap-4">
-        <div>
-          <h1 className="text-2xl font-bold">My Exercise Requests</h1>
-          <p className="text-muted-foreground">
-            Submit exercises for tutors to solve and track their status.
-          </p>
-        </div>
+      <div className="flex items-center justify-between flex-wrap gap-4">
+        <h1 className="text-2xl font-semibold">My Exercises</h1>
         <div className="flex items-center gap-2">
-          <Button 
-             variant={filterStatus === 'all' ? 'default' : 'outline'} 
-             size="sm"
-             onClick={() => setFilterStatus('all')}
-           >
-             All
-           </Button>
-          <Button 
-             variant={filterStatus === 'pending' ? 'default' : 'outline'} 
-             size="sm"
-             onClick={() => setFilterStatus('pending')}
-           >
-             Pending
-           </Button>
-           <Button 
-             variant={filterStatus === 'solved' ? 'default' : 'outline'} 
-             size="sm"
-             onClick={() => setFilterStatus('solved')}
-           >
-             Solved
-           </Button>
-          <Button onClick={() => setIsCreateModalOpen(true)} className="ml-2">
-            <Plus className="mr-2 h-4 w-4" />
-            Submit New Request
-          </Button>
+          <Dialog open={isCreateModalOpen} onOpenChange={setIsCreateModalOpen}>
+            <DialogTrigger asChild>
+              <Button size="sm" className="cursor-pointer">
+                <Plus className="mr-2 h-4 w-4" /> Create Exercise
+              </Button>
+            </DialogTrigger>
+          </Dialog>
+          <div className="flex items-center gap-2">
+            <Button 
+              variant={filterStatus === 'all' ? 'default' : 'outline'} 
+              size="sm"
+              onClick={() => setFilterStatus('all')}
+              className="cursor-pointer"
+            >
+              All
+            </Button>
+            <Button 
+              variant={filterStatus === 'new' ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => setFilterStatus('new')}
+              className="cursor-pointer"
+            >
+              New
+            </Button>
+            <Button 
+              variant={filterStatus === 'in progress' ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => setFilterStatus('in progress')}
+              className="cursor-pointer"
+            >
+              In Progress
+            </Button>
+            <Button 
+              variant={filterStatus === 'solved' ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => setFilterStatus('solved')}
+              className="cursor-pointer"
+            >
+              Solved
+            </Button>
+            <Button 
+              variant={filterStatus === 'cancelled' ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => setFilterStatus('cancelled')}
+              className="cursor-pointer"
+            >
+              Cancelled
+            </Button>
+          </div>
         </div>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <div className="border rounded-lg">
         {filteredExercises.length > 0 ? (
           filteredExercises.map((exercise) => (
-            <Card key={exercise.id} className="flex flex-col h-full hover:shadow-md transition-shadow">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-lg">{exercise.title}</CardTitle>
-                <CardDescription>{exercise.subject}</CardDescription>
-              </CardHeader>
-              <CardContent className="flex-1 space-y-3">
-                {exercise.status === 'solved' && exercise.solvedByTutor && (
-                    <div className="text-sm text-muted-foreground flex items-center gap-1 border-t pt-3">
-                       <UserCheck className="h-4 w-4 text-green-600" /> Solved by: {exercise.solvedByTutor.name}
-                    </div>
-                )}
-                {exercise.status !== 'solved' && <div className="border-t"></div>}
-
-                <div className={`text-sm text-muted-foreground flex items-center justify-between ${exercise.status !== 'solved' ? 'pt-3' : ''}`}>
+            <div key={exercise.id} className="flex flex-col md:flex-row items-start md:items-center justify-between p-4 border-b last:border-b-0 gap-4">
+              <div className="flex-1 space-y-1">
+                <h3 className="font-semibold text-base">{exercise.title}</h3>
+                <div className="text-sm text-muted-foreground flex items-center flex-wrap gap-x-3 gap-y-1">
+                  <span>{exercise.subject}</span>
                   <span className="flex items-center gap-1">
-                    <Clock className="h-4 w-4" /> Submitted: {exercise.submittedDate}
+                    <Tag className="h-3 w-3" /> €{exercise.price.toFixed(2)}
                   </span>
-                  <span className="flex items-center gap-1 font-medium text-primary">
-                    <Tag className="h-4 w-4" /> €{exercise.price.toFixed(2)}
+                  <span className="flex items-center gap-1">
+                    <Clock className="h-3 w-3" /> Submitted: {exercise.submittedDate}
                   </span>
+                  {exercise.status === 'solved' && exercise.solvedByTutor && (
+                     <span className="flex items-center gap-1 text-green-600 dark:text-green-500">
+                        <UserCheck className="h-3 w-3" /> Solved by: {exercise.solvedByTutor.name}
+                     </span>
+                 )}
                 </div>
-              </CardContent>
-              <CardFooter className="border-t pt-3 pb-3 flex flex-wrap items-center justify-between gap-2">
-                <Badge variant={getStatusVariant(exercise.status)} className="capitalize">
-                  {exercise.status}
-                </Badge>
-                <div className="flex gap-2">
+              </div>
+              <div className="flex items-center gap-3 w-full md:w-auto justify-end">
+                 <Badge variant={getStatusVariant(exercise.status)} className="capitalize">
+                    {exercise.status}
+                 </Badge>
+                 <div className="flex items-center gap-2"> 
                     <Button 
                         variant="outline" 
                         size="sm"
                         onClick={() => handleDownloadClick(exercise.fileName)}
-                        title={`Download original request file (${exercise.fileName})`}
+                        title={`Download request file (${exercise.fileName})`}
+                        className="cursor-pointer"
                     >
-                        <Download className="h-4 w-4 mr-2" /> Request
+                        <Download className="h-4 w-4 md:mr-2" /> <span className="hidden md:inline">Request</span>
                     </Button>
                     {exercise.status === 'solved' && exercise.solutionFileName && (
                         <Button 
@@ -195,16 +211,17 @@ export default function StudentExercisesPage() {
                             size="sm"
                             onClick={() => handleSolutionDownloadClick(exercise.solutionFileName)}
                             title={`Download solution file (${exercise.solutionFileName})`}
+                            className="cursor-pointer"
                         >
-                            <FileCheck className="h-4 w-4 mr-2" /> Solution
+                            <FileCheck className="h-4 w-4 md:mr-2" /> <span className="hidden md:inline">Solution</span>
                         </Button>
                     )}
-                </div>
-              </CardFooter>
-            </Card>
+                 </div>
+              </div>
+            </div>
           ))
         ) : (
-          <p className="text-center text-muted-foreground py-8 md:col-span-2 lg:col-span-3">
+          <p className="text-center text-muted-foreground p-8">
             No exercises match the current filter.
           </p>
         )}

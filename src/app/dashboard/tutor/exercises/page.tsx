@@ -2,246 +2,280 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { FileUp, Tag, User, Clock, Download, Filter, FileCheck } from "lucide-react";
+import { Download, Upload, Tag, Clock, Filter, User, FileCheck } from "lucide-react";
+import { UploadSolutionModal } from "@/components/modals/upload-solution-modal";
 
+// --- Define Exercise Interface, Status, and Mock Data --- 
 interface Exercise {
-  id: string;
-  title: string;
-  subject: string;
-  dueDate: string;
-  submissionsCount: number;
-  hasSolution: boolean;
-}
-
-interface ExerciseRequest {
-  id: string;
-  title: string;
-  subject: string;
-  description?: string;
-  price: number;
-  status: "pending" | "solved";
-  submittedDate: string;
-  student: {
     id: string;
-    name: string;
-  };
-  fileName: string;
-  solutionFileName?: string;
-  isPaid?: boolean;
-}
+    title: string;
+    subject: string;
+    description?: string; // Optional description
+    price: number; // Payout for the tutor
+    // Tutor-specific statuses (could differ slightly from student)
+    status: 'new' | 'in progress' | 'solved' | 'cancelled'; 
+    submittedDate: string;
+    fileName: string; // The request file name
+    requestedBy: { // Student who requested it
+      id: string;
+      name: string;
+    };
+    solutionFileName?: string; // Optional: name of the solution file uploaded by tutor
+  }
+  
+  // Define the status type including 'all' for filtering
+  type ExerciseStatus = Exercise['status'] | 'all';
+  
+  // Mock data for the tutor's view
+  const mockExercises: Exercise[] = [
+    {
+      id: "exr1",
+      title: "Calculus Problem Set Revision",
+      subject: "Mathematics",
+      description: "Review the attached problems and provide detailed solutions.",
+      price: 15.00,
+      status: "solved", // This one is already solved
+      submittedDate: "2024-03-18",
+      requestedBy: { id: "s1", name: "Alice Johnson" },
+      fileName: "calculus_problems_v2.pdf",
+      solutionFileName: "calculus_solution_final.pdf", // Has a solution file
+    },
+    {
+      id: "exr2",
+      title: "Physics Practice Problems",
+      subject: "Physics",
+      description: "Need help solving problems 5-10 attached.",
+      price: 20.50,
+      status: "new", // This is a new request for the tutor
+      submittedDate: "2024-03-20",
+      requestedBy: { id: "s1", name: "Alice Johnson" },
+      fileName: "physics_questions.pdf",
+    },
+    {
+      id: "exr3",
+      title: "Chemistry Lab Report Analysis",
+      subject: "Chemistry",
+      description: "Analyze the results of the attached lab report and answer the questions.",
+      price: 10.00,
+      status: "in progress", // Tutor started working on it
+      submittedDate: "2024-03-21",
+      requestedBy: { id: "s2", name: "Bob Williams" },
+      fileName: "chem_lab_report.docx",
+    },
+    {
+      id: "exr5",
+      title: "Python Data Structure Task",
+      subject: "Computer Science",
+      description: "Implement a linked list with insert and delete methods.",
+      price: 12.00,
+      status: "cancelled", // This request was cancelled
+      submittedDate: "2024-03-22",
+      requestedBy: { id: "s2", name: "Bob Williams" },
+      fileName: "python_ds_task.py",
+    },
+  ];
+// --- End Definitions --- 
 
-type TutorExerciseStatusFilter = "pending" | "solved" | "all";
-
-const mockExercises: Exercise[] = [
-  {
-    id: "1",
-    title: "Calculus Problem Set",
-    subject: "Mathematics",
-    dueDate: "2024-03-20",
-    submissionsCount: 5,
-    hasSolution: true,
-  },
-  {
-    id: "2",
-    title: "Physics Practice Problems",
-    subject: "Physics",
-    dueDate: "2024-03-22",
-    submissionsCount: 3,
-    hasSolution: false,
-  },
-];
-
-const mockExerciseRequests: ExerciseRequest[] = [
-  {
-    id: "exr1",
-    title: "Calculus Problem Set Revision",
-    subject: "Mathematics",
-    description: "Review the attached problems and provide detailed solutions.",
-    price: 15.00,
-    status: "solved",
-    submittedDate: "2024-03-18",
-    student: { id: "s1", name: "Alice Johnson" },
-    fileName: "calculus_problems_v2.pdf",
-    solutionFileName: "calculus_solution_final.pdf",
-    isPaid: true,
-  },
-  {
-    id: "exr2",
-    title: "Physics Practice Problems",
-    subject: "Physics",
-    description: "Need help solving problems 5-10 attached.",
-    price: 20.50,
-    status: "pending",
-    submittedDate: "2024-03-20",
-    student: { id: "s1", name: "Alice Johnson" },
-    fileName: "physics_questions.pdf",
-  },
-  {
-    id: "exr3",
-    title: "Chemistry Lab Report Analysis",
-    subject: "Chemistry",
-    description: "Analyze the results of the attached lab report and answer the questions.",
-    price: 10.00,
-    status: "solved",
-    submittedDate: "2024-03-21",
-    student: { id: "s2", name: "Bob Williams" },
-    fileName: "chem_lab_report.docx",
-    solutionFileName: "chem_lab_solution.pdf",
-    isPaid: false,
-  },
-  {
-    id: "exr4",
-    title: "Differential Equations Set",
-    subject: "Mathematics",
-    description: "Solve the following set of differential equations.",
-    price: 25.00,
-    status: "solved",
-    submittedDate: "2024-03-22",
-    student: { id: "s1", name: "Alice Johnson" },
-    fileName: "diff_eq_set.pdf",
-    solutionFileName: "diff_eq_solution.pdf",
-    isPaid: false,
-  },
-  {
-    id: "exr5",
-    title: "Python Data Structure Task",
-    subject: "Computer Science",
-    description: "Implement a linked list with insert and delete methods.",
-    price: 12.00,
-    status: "solved",
-    submittedDate: "2024-03-22",
-    student: { id: "s2", name: "Bob Williams" },
-    fileName: "python_ds_task.py",
-    solutionFileName: "python_ds_solution.zip",
-    isPaid: true,
-  },
-];
+// Helper function to determine Badge variant (adjust based on defined statuses)
+const getStatusVariant = (status: Exercise['status']): "default" | "secondary" | "outline" | "destructive" => {
+  switch (status) {
+    case 'new':
+      return 'secondary'; // Use secondary for new/pending
+    case 'in progress':
+      return 'outline'; // Outline for in progress
+    case 'solved':
+      return 'default'; // Default (often green/blue) for solved
+    case 'cancelled':
+      return 'destructive'; // Destructive (red) for cancelled
+    default:
+      return 'secondary'; // Fallback
+  }
+};
 
 export default function TutorExercisesPage() {
-  const [exerciseRequests, setExerciseRequests] = useState<ExerciseRequest[]>(mockExerciseRequests);
-  const [filterStatus, setFilterStatus] = useState<TutorExerciseStatusFilter>('pending');
+  const [exercises, setExercises] = useState<Exercise[]>(mockExercises); // Assuming mock data source
+  const [filterStatus, setFilterStatus] = useState<ExerciseStatus | 'all'>('all');
+  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
+  const [selectedExerciseForUpload, setSelectedExerciseForUpload] = useState<Exercise | null>(null);
 
-  const handleUploadSolutionClick = (request: ExerciseRequest) => {
-    console.log("Attempting to upload solution for:", request.id);
+  // Handler to open the upload modal
+  const handleOpenUploadModal = (exercise: Exercise) => {
+    setSelectedExerciseForUpload(exercise);
+    setIsUploadModalOpen(true);
   };
 
-  const handleRequestDownloadClick = (fileName: string) => {
-    console.log(`Attempting to download request file: ${fileName}`);
-    alert(`Download simulation: ${fileName}`);
+  // Handler for closing the modal and potentially updating the exercise list
+  const handleUploadSubmit = (exerciseId: string, solutionFileName: string) => {
+    // In a real app, you'd update the backend and refresh data.
+    // For this mock setup, we'll just update the local state.
+    setExercises(prevExercises =>
+      prevExercises.map(ex =>
+        ex.id === exerciseId ? { ...ex, status: 'solved', solutionFileName: solutionFileName } : ex
+      )
+    );
+    setIsUploadModalOpen(false);
+    setSelectedExerciseForUpload(null);
+    console.log(`Uploaded solution ${solutionFileName} for exercise ${exerciseId}`);
   };
 
-  const handleSolutionDownloadClick = (solutionFileName: string | undefined) => {
-    if (!solutionFileName) return;
-    console.log(`Attempting to download solution file: ${solutionFileName}`);
-    alert(`Download simulation: ${solutionFileName}`);
+  // Handler for downloading the request file
+  const handleRequestDownload = (fileName: string) => {
+    // Simulate file download
+    console.log(`Downloading request file: ${fileName}`);
+    alert(`Simulating download for: ${fileName}`);
   };
 
-  const filteredRequests = exerciseRequests.filter(request =>
-    filterStatus === 'all' || request.status === filterStatus
+  // --- Add handler for downloading solution --- 
+  const handleSolutionDownload = (fileName: string | undefined) => {
+    if (!fileName) return;
+    // Simulate file download
+    console.log(`Downloading solution file: ${fileName}`);
+    alert(`Simulating download for: ${fileName}`);
+  };
+  // --- End handler --- 
+
+  // Filtering logic
+  const filteredExercises = exercises.filter(
+    (exercise) => filterStatus === 'all' || exercise.status === filterStatus
   );
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center flex-wrap gap-4">
-        <div>
-          <h1 className="text-2xl font-bold">Available Exercise Requests</h1>
-          <p className="text-muted-foreground">
-            Browse pending requests and upload solutions.
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-semibold">Exercises Assigned</h1>
+        {/* --- Filter Buttons --- */}
+        <div className="flex items-center gap-2 flex-wrap">
           <Button
-            variant={filterStatus === 'pending' ? 'default' : 'outline'}
+            variant={filterStatus === 'all' ? 'default' : 'outline'}
             size="sm"
-            onClick={() => setFilterStatus('pending')}
+            onClick={() => setFilterStatus('all')}
+            className="cursor-pointer"
           >
-            Pending
+            All
+          </Button>
+          <Button
+            variant={filterStatus === 'new' ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setFilterStatus('new')}
+            className="cursor-pointer"
+          >
+            New
+          </Button>
+          <Button
+            variant={filterStatus === 'in progress' ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setFilterStatus('in progress')}
+            className="cursor-pointer"
+          >
+            In Progress
           </Button>
           <Button
             variant={filterStatus === 'solved' ? 'default' : 'outline'}
             size="sm"
             onClick={() => setFilterStatus('solved')}
+            className="cursor-pointer"
           >
             Solved
           </Button>
           <Button
-            variant={filterStatus === 'all' ? 'default' : 'outline'}
+            variant={filterStatus === 'cancelled' ? 'default' : 'outline'}
             size="sm"
-            onClick={() => setFilterStatus('all')}
+            onClick={() => setFilterStatus('cancelled')}
+            className="cursor-pointer"
           >
-            All Requests
+            Cancelled
           </Button>
         </div>
+        {/* --- End Filter Buttons --- */}
       </div>
 
-      <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-4">
-        {filteredRequests.length > 0 ? (
-          filteredRequests.map((request) => (
-            <Card key={request.id} className="flex flex-col h-full hover:shadow-md transition-shadow">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-lg">{request.title}</CardTitle>
-                <CardDescription>
-                  <span className="font-medium">{request.subject}</span>
-                  <span className="mx-1.5">•</span>
-                  <span>From: {request.student.name}</span>
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="flex-1 pb-4 min-h-[60px]">
-                {request.description && (
-                  <p className="text-sm text-muted-foreground line-clamp-3">{request.description}</p>
-                )}
-              </CardContent>
-              <div className="border-t px-6 py-3 text-sm flex items-center justify-between text-muted-foreground">
-                <span className="flex items-center gap-1">
-                  <Clock className="h-4 w-4" /> Submitted: {request.submittedDate}
-                </span>
-                <span className="flex items-center gap-1 font-semibold text-green-600 dark:text-green-500">
-                  <Tag className="h-4 w-4"/> Payout: €{request.price.toFixed(2)}
-                </span>
+      {/* List Container */}
+      <div className="border rounded-lg">
+        {filteredExercises.length > 0 ? (
+          filteredExercises.map((exercise) => (
+            // List Item
+            <div key={exercise.id} className="flex flex-col md:flex-row items-start md:items-center justify-between p-4 border-b last:border-b-0 gap-4">
+              {/* Left Side: Details */}
+              <div className="flex-1 space-y-1">
+                 <h3 className="font-semibold text-base">{exercise.title}</h3>
+                 <div className="text-sm text-muted-foreground flex items-center flex-wrap gap-x-3 gap-y-1">
+                    <span>{exercise.subject}</span>
+                    <span className="flex items-center gap-1">
+                        <Tag className="h-3 w-3" /> €{exercise.price.toFixed(2)}
+                    </span>
+                    <span className="flex items-center gap-1">
+                        <Clock className="h-3 w-3" /> Submitted: {exercise.submittedDate}
+                    </span>
+                    {exercise.requestedBy && (
+                        <span className="flex items-center gap-1">
+                           <User className="h-3 w-3" /> Requested by: {exercise.requestedBy.name}
+                        </span>
+                    )}
+                 </div>
               </div>
-              <CardFooter className="border-t px-6 py-3 flex flex-wrap items-center justify-between gap-2">
-                <div>
-                  {request.status === 'solved' ? (
-                    request.isPaid ? (
-                      <Badge variant="success">Paid</Badge>
-                    ) : (
-                      <Badge variant="secondary">Solved</Badge>
-                    )
-                  ) : (
-                    <Badge variant="outline">Pending</Badge>
-                  )}
-                </div>
-                <div className="flex gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleRequestDownloadClick(request.fileName)}
-                    title={`Download student request file (${request.fileName})`}
-                  >
-                    <Download className="h-4 w-4 mr-2" /> Request
-                  </Button>
-                  {request.status === 'solved' && request.solutionFileName && (
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      onClick={() => handleSolutionDownloadClick(request.solutionFileName)}
-                      title={`Download your solution (${request.solutionFileName})`}
-                    >
-                      <FileCheck className="h-4 w-4 mr-2" /> Solution
-                    </Button>
-                  )}
-                </div>
-              </CardFooter>
-            </Card>
+              {/* Right Side: Status & Actions */}
+              <div className="flex items-center gap-3 w-full md:w-auto justify-end">
+                 <Badge variant={getStatusVariant(exercise.status)} className="capitalize min-w-[90px] text-center justify-center">
+                    {exercise.status}
+                 </Badge>
+                 <div className="flex items-center gap-2"> 
+                    {/* Download Request Button (Hide on cancelled) */}
+                    {exercise.status !== 'cancelled' && (
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleRequestDownload(exercise.fileName)}
+                            title={`Download request file (${exercise.fileName})`}
+                            className="cursor-pointer"
+                        >
+                            <Download className="h-4 w-4 md:mr-2" /> <span className="hidden md:inline">Request</span>
+                        </Button>
+                    )}
+                    {/* Upload Solution Button (Conditional) */}
+                    {exercise.status !== 'solved' && exercise.status !== 'cancelled' && (
+                        <Button
+                            variant="secondary"
+                            size="sm"
+                            onClick={() => handleOpenUploadModal(exercise)}
+                            title="Upload solution file"
+                            className="cursor-pointer"
+                        >
+                            <Upload className="h-4 w-4 md:mr-2" /> <span className="hidden md:inline">Upload Solution</span>
+                        </Button>
+                    )}
+                    {/* Download Solution Button (Conditional) */}
+                    {exercise.status === 'solved' && exercise.solutionFileName && (
+                        <Button
+                            variant="secondary"
+                            size="sm"
+                            onClick={() => handleSolutionDownload(exercise.solutionFileName)}
+                            title={`Download solution file (${exercise.solutionFileName})`}
+                            className="cursor-pointer"
+                        >
+                            <FileCheck className="h-4 w-4 md:mr-2" /> <span className="hidden md:inline">Solution</span>
+                        </Button>
+                    )}
+                 </div>
+              </div>
+            </div>
           ))
         ) : (
-          <p className="text-center text-muted-foreground py-8 md:col-span-2 lg:col-span-3">
-            No exercise requests match the current filter.
+          <p className="text-center text-muted-foreground p-8">
+            No exercises match the current filter.
           </p>
         )}
       </div>
+
+      {/* Upload Solution Modal */}
+      {selectedExerciseForUpload && (
+        <UploadSolutionModal
+          isOpen={isUploadModalOpen}
+          onClose={() => setIsUploadModalOpen(false)}
+          onSubmit={handleUploadSubmit}
+          exercise={selectedExerciseForUpload}
+        />
+      )}
     </div>
   );
 } 

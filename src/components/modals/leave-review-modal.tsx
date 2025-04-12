@@ -103,9 +103,11 @@ export function LeaveReviewModal({ isOpen, onClose, targetUser, onSubmit }: Leav
         </div>
         <DialogFooter>
           <DialogClose asChild>
-            <Button variant="outline">Cancel</Button>
+            <Button variant="outline" onClick={handleClose} className="cursor-pointer">
+              Cancel
+            </Button>
           </DialogClose>
-          <Button onClick={handleReviewSubmit} disabled={rating === 0}>
+          <Button onClick={handleReviewSubmit} disabled={rating === 0} className="cursor-pointer">
             Submit Review
           </Button>
         </DialogFooter>

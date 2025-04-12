@@ -144,10 +144,12 @@ export function CreateExerciseModal({ isOpen, onClose, onSubmit }: CreateExercis
           </div>
           <DialogFooter>
             <DialogClose asChild>
-              <Button type="button" variant="outline">Cancel</Button>
+              <Button variant="outline" onClick={onClose} className="cursor-pointer">
+                Cancel
+              </Button>
             </DialogClose>
-            <Button type="submit">
-              <Plus className="mr-2 h-4 w-4" /> Submit Request
+            <Button onClick={handleSubmit} disabled={!title || !subject || !price || !file} className="cursor-pointer">
+              Submit Request
             </Button>
           </DialogFooter>
         </form>
