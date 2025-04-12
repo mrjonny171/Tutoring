@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 7, "column": 0}, "map": {"version":3,"sources":["file:///Users/joaosantos/Documents/Tutoring/src/app/dashboard/page.tsx"],"sourcesContent":["\"use client\";\n\nimport { redirect } from \"next/navigation\";\n\nexport default function DashboardPage() {\n  // Default to tutor view, but allow switching through the UI\n  redirect(\"/dashboard/tutor\");\n} "],"names":[],"mappings":";;;AAEA;AAFA;;AAIe,SAAS;IACtB,4DAA4D;IAC5D,CAAA,GAAA,qIAAA,CAAA,WAAQ,AAAD,EAAE;AACX;KAHwB","debugId":null}}]
+}
